@@ -1,0 +1,6 @@
+{
+  "name": "Mundo Doce do Saber",
+  "description": "Plataforma kawaii de jogos educativos de Português e Matemática para crianças do 1º ao 5º ano do Ensino Fundamental 1.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

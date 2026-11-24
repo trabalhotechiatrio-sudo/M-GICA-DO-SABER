@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="/assets/aistudio/Gatinho_kawaii_a_ler_com_ternura_670f95ac.png" />
+  <title>Mágica do Saber — Jogos Educativos (1º ao 5º Ano)</title>
+
+  <!-- Google Fonts: Fredoka (Títulos) e Nunito (Textos) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Estilos e Animações Kawaii -->
+  <style>
+    body {
+      font-family: 'Nunito', system-ui, sans-serif;
+      background-color: #F7D8EC;
+      color: #3D2C3E;
+    }
+
+    h1, h2, h3, .font-display {
+      font-family: 'Fredoka', system-ui, sans-serif;
+    }
+
+    .kawaii-bg-pattern {
+      background-color: #F9D8EC;
+      background-image:
+        radial-gradient(circle at 10% 15%, rgba(255, 143, 185, 0.55) 0%, transparent 38%),
+        radial-gradient(circle at 90% 14%, rgba(116, 198, 255, 0.58) 0%, transparent 40%),
+        radial-gradient(circle at 82% 82%, rgba(190, 152, 255, 0.55) 0%, transparent 40%),
+        radial-gradient(circle at 18% 85%, rgba(122, 232, 184, 0.55) 0%, transparent 38%),
+        radial-gradient(circle at 50% 48%, rgba(255, 224, 115, 0.45) 0%, transparent 45%),
+        radial-gradient(#E88AB5 1.5px, transparent 1.5px);
+      background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 26px 26px;
+    }
+
+    .kawaii-card {
+      box-shadow: 0 10px 26px -6px rgba(214, 130, 170, 0.24), 0 4px 0 rgba(61, 44, 62, 0.08);
+      transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 180ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .kawaii-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 16px 32px -6px rgba(214, 130, 170, 0.34), 0 6px 0 rgba(61, 44, 62, 0.1);
+    }
+
+    .kawaii-btn {
+      box-shadow: 0 3px 0 rgba(61, 44, 62, 0.1);
+      transition: transform 160ms cubic-bezier(0.16, 1, 0.3, 1), background-color 160ms ease;
+    }
+
+    .kawaii-btn:hover:not(:disabled) {
+      transform: translateY(-2px) scale(1.02);
+    }
+
+    .kawaii-btn:active:not(:disabled) {
+      transform: translateY(2px) scale(0.98);
+    }
+
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-7px); }
+    }
+
+    @keyframes popIn {
+      0% { opacity: 0; transform: scale(0.92); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes gentleWobble {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+
+    @keyframes confettiDrop {
+      0% { opacity: 1; transform: translateY(-10px) rotate(0deg) scale(0.9); }
+      100% { opacity: 0; transform: translateY(120px) rotate(240deg) scale(1.1); }
+    }
+
+    @keyframes cartoonBounce {
+      0%, 100% { transform: translateY(0) scale(1); }
+      35% { transform: translateY(-9px) scale(1.06, 0.96); }
+      70% { transform: translateY(-2px) scale(0.98, 1.03); }
+    }
+
+    .animate-float-slow { animation: floatSlow 3.6s ease-in-out infinite; }
+    .animate-pop-in { animation: popIn 220ms cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .animate-wobble { animation: gentleWobble 260ms ease-in-out; }
+    .animate-confetti { animation: confettiDrop 1100ms cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .animate-cartoon-bounce { animation: cartoonBounce 650ms cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .animate-float-slow, .animate-pop-in, .animate-wobble, .animate-confetti, .animate-cartoon-bounce {
+        animation: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col kawaii-bg-pattern text-[#3D2C3E]">
+
+  <!-- Container de Confetes -->
+  <div id="confetti-layer" class="pointer-events-none fixed inset-x-0 top-16 z-50 flex justify-center overflow-hidden h-44 hidden" aria-hidden="true"></div>
+
+  <!-- Barra Arco-Íris Vibrante -->
+  <div class="h-2 w-full bg-gradient-to-r from-[#FF5C97] via-[#FFD43B] via-[#3AD696] to-[#3DA9FC]"></div>
+
+  <!-- Barra Superior Colorida -->
+  <header class="sticky top-0 z-40 bg-gradient-to-r from-[#FFC4DC]/95 via-[#FFE89E]/95 to-[#B8E2FF]/95 backdrop-blur border-b-3 border-[#F58BB2]">
+    <div class="max-w-6xl mx-auto px-3 sm:px-6 h-16 flex items-center justify-between gap-2 sm:gap-4">
+      <button onclick="goHome()" class="flex items-center gap-2.5 font-display text-base sm:text-xl font-bold text-[#3D2C3E] whitespace-nowrap cursor-pointer">
+        <span class="w-9 h-9 sm:w-10 sm:h-10 rounded-full overflow-hidden border-2 border-[#F49EB6] shadow-2xs shrink-0 inline-block bg-white"><img src="/assets/aistudio/Gatinho_kawaii_a_ler_com_ternura_670f95ac.png" alt="Logo Mágica do Saber" class="w-full h-full object-cover object-[50%_38%] scale-110" /></span>
+        <span>Mágica do Saber</span>
+      </button>
+
+      <nav class="hidden lg:flex items-center gap-6 text-sm font-bold text-[#5C475E]">
+        <button onclick="goHome()" class="hover:text-[#C93B6B] hover:underline underline-offset-4 cursor-pointer">Séries</button>
+        <button onclick="openCurrentGradeOrFirst()" class="hover:text-[#C93B6B] hover:underline underline-offset-4 cursor-pointer">Matérias</button>
+        <button onclick="toggleAlbum(true)" class="hover:text-[#C93B6B] hover:underline underline-offset-4 cursor-pointer">Meus Lacinhos</button>
+      </nav>
+
+      <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+        <button id="music-toggle-btn" onclick="toggleMusic()" class="kawaii-btn px-2.5 sm:px-3 py-1.5 rounded-full border-2 text-xs font-extrabold whitespace-nowrap cursor-pointer bg-[#E5D4FF] border-[#C1A1FA] text-[#532B94]">🎵 Música On</button>
+        <button id="sfx-toggle-btn" onclick="toggleSfx()" class="kawaii-btn px-2.5 sm:px-3 py-1.5 rounded-full border-2 text-xs font-extrabold whitespace-nowrap cursor-pointer bg-[#C2E7FF] border-[#86CBFA] text-[#16588E]">🔊 Efeitos On</button>
+        <button id="voice-toggle-btn" onclick="toggleVoice()" class="kawaii-btn px-2.5 sm:px-3 py-1.5 rounded-full border-2 text-xs font-extrabold whitespace-nowrap cursor-pointer bg-[#FFF4BD] border-[#F0D15A] text-[#6E5104]">🗣️ Voz On</button>
+        <button onclick="toggleAlbum(true)" class="kawaii-btn inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-full bg-[#FFD6E0] hover:bg-[#FFC2D1] border-2 border-[#F49EB6] text-[#8F2449] font-extrabold text-xs sm:text-sm whitespace-nowrap cursor-pointer">
+          <span>⭐</span>
+          <span id="header-stars-count" class="tabular-nums">0 ★ · 0 pts</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Área Principal Dinâmica -->
+  <main id="app-root" class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8 sm:py-10"></main>
+
+  <!-- Rodapé Colorido -->
+  <footer class="border-t-3 border-[#F58BB2] bg-gradient-to-r from-[#FFC4DC] via-[#FFE89E] to-[#B8E2FF] py-6 px-4 sm:px-6 mt-8">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-extrabold text-[#3D2C3E]">
+      <span>✨ Mágica do Saber · Ensino Fundamental 1 (1º ao 5º Ano)</span>
+      <span>8 jogos por série · Progresso salvo automaticamente no navegador 🎀</span>
+    </div>
+  </footer>
+
+  <!-- Modal Álbum de Lacinhos e Troféus -->
+  <div id="album-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-[#3D2C3E]/40 p-4" role="dialog" aria-modal="true">
+    <div class="bg-gradient-to-b from-[#FFF5FA] via-[#FFFDF9] to-[#F3FAFF] w-full max-w-2xl rounded-3xl border-4 border-[#F7B4C6] shadow-xl p-6 sm:p-8 max-h-[90vh] overflow-y-auto space-y-6 animate-pop-in">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <h2 class="font-display text-2xl sm:text-3xl font-bold text-[#3D2C3E]">Álbum Mágico de Lacinhos e Troféus ✨</h2>
+          <p class="text-sm font-semibold text-[#6E5670]">Estrelas, pontos, desafios em andamento e fases concluídas ficam salvos automaticamente!</p>
+        </div>
+        <button onclick="toggleAlbum(false)" class="w-10 h-10 rounded-full bg-[#FFD6E0] hover:bg-[#FFC2D1] border-2 border-[#F4A2B8] text-[#9C2D54] font-bold cursor-pointer">✕</button>
+      </div>
+      <div id="album-content" class="space-y-4"></div>
+      <div class="flex items-center justify-between pt-2 border-t border-[#F0E4E8]">
+        <button onclick="resetSavedProgress()" class="text-xs font-bold text-[#8A718B] hover:text-[#C93B6B] cursor-pointer">Reiniciar Progresso</button>
+        <button onclick="toggleAlbum(false)" class="kawaii-btn px-6 py-2.5 rounded-full bg-[#D94E7A] text-white font-extrabold text-sm cursor-pointer">Continuar Brincando</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Puro da Plataforma -->
+  <script>
+    // =========================================================================
+    // 1. PRÊMIOS KAWAII & CONTEÚDO DO 1º AO 5º ANO (8 JOGOS × 10 ITENS)
+    // =========================================================================
+    const REWARDS = [
+      { id: 'bow', name: 'Lacinho Morango', desc: 'Ganhe suas primeiras 5 estrelinhas.', req: 5, icon: '🎀', bg: '#FFD6E0' },
+      { id: 'cloud', name: 'Nuvem Algodão-Doce', desc: 'Alcance 15 estrelinhas acumuladas.', req: 15, icon: '☁️', bg: '#C2E7FF' },
+      { id: 'cupcake', name: 'Cupcake Dourado', desc: 'Conquiste 30 estrelinhas.', req: 30, icon: '🧁', bg: '#FFF4BD' },
+      { id: 'crown', name: 'Coroa de Menta', desc: 'Brilhe com 50 estrelinhas.', req: 50, icon: '👑', bg: '#D4F8E8' },
+      { id: 'rainbow', name: 'Estrela Arco-Íris', desc: 'Colecione 75 estrelinhas.', req: 75, icon: '🌈', bg: '#E5D4FF' },
+      { id: 'medal', name: 'Medalha Mágica do Saber', desc: 'Grande mestre com 100 estrelinhas!', req: 100, icon: '🏅', bg: '#FFD6E0' },
+    ];
+
+    const GRADES = [
+      {
+        id: 1, title: '1º Ano', subtitle: 'Alfabetização e Primeiros Números', mascot: 'Mimi Morango',
+        cardBg: '#FFA6C9', cardBorder: '#E84D8A', accentBg: '#FFF0F6', accentText: '#8A1143',
+        ptTopics: 'Vogais · Sons Iniciais · Rimas', matTopics: 'Contagem · Soma Simples · Maior e Menor',
+        ptQuiz: [
+          { prompt: 'Qual vogal começa a palavra ABELHA?', emoji: '🐝', options: ['A', 'E', 'I', 'O'], correct: 0, hint: 'Fale devagar: A-be-lha!' },
+          { prompt: 'Qual palavra rima com GATO?', emoji: '🐱', options: ['BOLA', 'PATO', 'FLOR', 'SOL'], correct: 1, hint: 'Termina com o som -ATO.' },
+          { prompt: 'Com qual letra começa a palavra BOLO?', emoji: '🍰', options: ['C', 'D', 'B', 'M'], correct: 2, hint: 'Faz o som de BÔ-lo.' },
+          { prompt: 'Quantas sílabas tem a palavra MA-ÇÃ?', emoji: '🍎', options: ['1 sílaba', '2 sílabas', '3 sílabas', '4 sílabas'], correct: 1, hint: 'Bata palmas: MA - ÇÃ.' },
+          { prompt: 'Qual fruta começa com a letra U?', emoji: '🍇', options: ['MORANGO', 'BANANA', 'UVA', 'PERA'], correct: 2, hint: 'Tem cachos roxinhos!' },
+          { prompt: 'Qual palavra começa com a letra E?', emoji: '🐘', options: ['ELEFANTE', 'SAPO', 'URSO', 'TIGRE'], correct: 0, hint: 'Animal com tromba!' },
+          { prompt: 'Qual palavra rima com MÃO?', emoji: '🍞', options: ['PÉ', 'PÃO', 'DEDO', 'CASA'], correct: 1, hint: 'Termina com -ÃO.' },
+          { prompt: 'Qual é a primeira sílaba de CA-SA?', emoji: '🏠', options: ['SA', 'CA', 'CO', 'LA'], correct: 1, hint: 'Primeiro pedacinho!' },
+          { prompt: 'Qual animal começa com L?', emoji: '🦁', options: ['MACACO', 'LEÃO', 'PEIXE', 'VACA'], correct: 1, hint: 'Tem juba dourada!' },
+          { prompt: 'Quantas vogais existem na palavra LUA?', emoji: '🌙', options: ['1 vogal', '2 vogais', '3 vogais', '0 vogais'], correct: 1, hint: 'U e A são vogais!' },
+        ],
+        ptBuilder: [
+          { instruction: 'Complete a letra que falta:', emoji: '⚽', mode: 'missing', prefix: 'B', suffix: 'LA', answer: 'O', tiles: ['O', 'A', 'U', 'E'], hint: 'BO-LA!' },
+          { instruction: 'Complete a vogal que falta:', emoji: '🏠', mode: 'missing', prefix: 'C', suffix: 'SA', answer: 'A', tiles: ['I', 'A', 'O', 'U'], hint: 'CA-SA!' },
+          { instruction: 'Complete a letra inicial:', emoji: '🦆', mode: 'missing', prefix: '', suffix: 'ATO', answer: 'P', tiles: ['M', 'P', 'L', 'V'], hint: 'PA-TO!' },
+          { instruction: 'Complete a letra do meio:', emoji: '☀️', mode: 'missing', prefix: 'S', suffix: 'L', answer: 'O', tiles: ['E', 'I', 'O', 'A'], hint: 'SOL!' },
+          { instruction: 'Junte as sílabas:', emoji: '🍼', mode: 'syllables', answer: 'BEBÊ', target: ['BE', 'BÊ'], tiles: ['BÊ', 'BE', 'CA', 'DO'], hint: 'BE-BÊ!' },
+          { instruction: 'Complete a vogal:', emoji: '🌙', mode: 'missing', prefix: 'L', suffix: 'A', answer: 'U', tiles: ['A', 'E', 'U', 'O'], hint: 'LU-A!' },
+          { instruction: 'Complete a letra inicial:', emoji: '🐸', mode: 'missing', prefix: '', suffix: 'APO', answer: 'S', tiles: ['S', 'T', 'B', 'D'], hint: 'SA-PO!' },
+          { instruction: 'Junte as sílabas:', emoji: '🎈', mode: 'syllables', answer: 'BALÃO', target: ['BA', 'LÃO'], tiles: ['LÃO', 'BA', 'PI', 'TU'], hint: 'BA-LÃO!' },
+          { instruction: 'Complete a vogal final:', emoji: '🐱', mode: 'missing', prefix: 'GAT', suffix: '', answer: 'O', tiles: ['A', 'E', 'I', 'O'], hint: 'GA-TO!' },
+          { instruction: 'Junte as sílabas:', emoji: '🍐', mode: 'syllables', answer: 'PERA', target: ['PE', 'RA'], tiles: ['RA', 'PE', 'MA', 'LO'], hint: 'PE-RA!' },
+        ],
+        ptTrueFalse: [
+          { statement: 'A palavra OVO começa com a vogal O.', emoji: '🥚', isTrue: true, explanation: 'Sim! O-VO começa com O.' },
+          { statement: 'A palavra BOLA tem apenas 1 sílaba.', emoji: '⚽', isTrue: false, explanation: 'BO-LA tem 2 sílabas.' },
+          { statement: 'PATO rima com GATO.', emoji: '🦆', isTrue: true, explanation: 'Ambas terminam com -ATO.' },
+          { statement: 'A letra M é uma vogal.', emoji: '🔤', isTrue: false, explanation: 'M é consoante!' },
+          { statement: 'A palavra UVA começa com a letra U.', emoji: '🍇', isTrue: true, explanation: 'U-VA começa com U.' },
+          { statement: 'SOL e LUA rimam entre si.', emoji: '☀️', isTrue: false, explanation: 'Terminam com sons diferentes.' },
+          { statement: 'A palavra DADO começa com D.', emoji: '🎲', isTrue: true, explanation: 'DA-DO começa com D.' },
+          { statement: 'BANANA tem 3 sílabas: BA-NA-NA.', emoji: '🍌', isTrue: true, explanation: 'São 3 pedacinhos!' },
+          { statement: 'A palavra PEIXE começa com F.', emoji: '🐟', isTrue: false, explanation: 'PEIXE começa com P!' },
+          { statement: 'A letra A aparece na palavra CASA.', emoji: '🏠', isTrue: true, explanation: 'C-A-S-A tem duas letras A.' },
+        ],
+        ptMatch: [
+          [{ id: '1pa', left: '🐝 Abelha', right: 'Começa com A' }, { id: '1pb', left: '🐘 Elefante', right: 'Começa com E' }, { id: '1pc', left: '🏝️ Ilha', right: 'Começa com I' }, { id: '1pd', left: '🐑 Ovelha', right: 'Começa com O' }, { id: '1pe', left: '🍇 Uva', right: 'Começa com U' }],
+          [{ id: '1pf', left: '🐱 Gato', right: 'Rima com Pato' }, { id: '1pg', left: '🍞 Pão', right: 'Rima com Mão' }, { id: '1ph', left: '⚽ Bola', right: 'Rima com Cola' }, { id: '1pi', left: '🌻 Flor', right: 'Rima com Amor' }, { id: '1pj', left: '💍 Anel', right: 'Rima com Mel' }],
+        ],
+        matQuiz: [
+          { prompt: 'Quantos morangos temos: 🍓🍓🍓🍓🍓?', emoji: '🍓', options: ['3', '4', '5', '6'], correct: 2, hint: 'Conte um por um!' },
+          { prompt: 'Se você tem 2 balas e ganha 3, com quantas fica?', emoji: '🍬', options: ['4', '5', '6', '7'], correct: 1, hint: '2 + 3 = 5!' },
+          { prompt: 'Qual número vem depois do 9?', emoji: '🎈', options: ['8', '10', '11', '7'], correct: 1, hint: '7, 8, 9...' },
+          { prompt: 'Quantos cupcakes: 🧁🧁🧁🧁🧁🧁🧁?', emoji: '🧁', options: ['6', '7', '8', '9'], correct: 1, hint: 'Conte devagar!' },
+          { prompt: 'Qual forma tem 3 pontinhas (lados)?', emoji: '🔺', options: ['Círculo', 'Quadrado', 'Triângulo', 'Retângulo'], correct: 2, hint: 'Tri lembra três!' },
+          { prompt: 'Quanto é 4 + 4?', emoji: '🍒', options: ['6', '7', '8', '9'], correct: 2, hint: '4 dedinhos + 4 dedinhos!' },
+          { prompt: 'Qual número vem ANTES do 6?', emoji: '🐣', options: ['4', '5', '7', '8'], correct: 1, hint: '3, 4, ..., 6!' },
+          { prompt: 'Tinha 5 biscoitos e comi 2. Quantos sobraram?', emoji: '🍪', options: ['2', '3', '4', '5'], correct: 1, hint: '5 - 2!' },
+          { prompt: 'Quantas estrelas: ⭐⭐⭐⭐⭐⭐⭐⭐⭐?', emoji: '⭐', options: ['8', '9', '10', '7'], correct: 1, hint: 'Conte todas sem pular!' },
+          { prompt: 'Qual forma é bem redonda como uma bola?', emoji: '🟠', options: ['Quadrado', 'Triângulo', 'Círculo', 'Estrela'], correct: 2, hint: 'Sem pontas!' },
+        ],
+        matMatch: [
+          [{ id: '1a', left: '1 + 1', right: '2' }, { id: '1b', left: '2 + 2', right: '4' }, { id: '1c', left: '3 + 2', right: '5' }, { id: '1d', left: '5 + 1', right: '6' }, { id: '1e', left: '4 + 3', right: '7' }],
+          [{ id: '1f', left: '4 - 1', right: '3' }, { id: '1g', left: '5 + 5', right: '10' }, { id: '1h', left: '6 + 2', right: '8' }, { id: '1i', left: '10 - 1', right: '9' }, { id: '1j', left: '7 - 6', right: '1' }],
+        ],
+        matMissing: [
+          { instruction: 'Complete a soma:', emoji: '🍓', parts: ['2', '+', '?', '=', '4'], answer: '2', options: ['1', '2', '3', '4'], hint: '2 + 2 = 4!' },
+          { instruction: 'Complete a sequência:', emoji: '🐥', parts: ['1,', '2,', '?', ', 4'], answer: '3', options: ['3', '5', '0', '6'], hint: 'Entre 2 e 4!' },
+          { instruction: 'Complete a soma:', emoji: '🍬', parts: ['3', '+', '?', '=', '5'], answer: '2', options: ['1', '2', '3', '4'], hint: '3 + 2 = 5!' },
+          { instruction: 'Complete a subtração:', emoji: '🍪', parts: ['5', '-', '?', '=', '3'], answer: '2', options: ['1', '2', '3', '4'], hint: '5 - 2 = 3!' },
+          { instruction: 'Complete a sequência:', emoji: '🎈', parts: ['5,', '6,', '7,', '?'], answer: '8', options: ['7', '8', '9', '10'], hint: 'Depois do 7!' },
+          { instruction: 'Complete a soma:', emoji: '🌸', parts: ['?', '+', '4', '=', '6'], answer: '2', options: ['1', '2', '3', '4'], hint: '2 + 4 = 6!' },
+          { instruction: 'Complete para dar 10:', emoji: '⭐', parts: ['5', '+', '?', '=', '10'], answer: '5', options: ['4', '5', '6', '7'], hint: '5 + 5 = 10!' },
+          { instruction: 'Complete a sequência:', emoji: '🍎', parts: ['8,', '9,', '?'], answer: '10', options: ['7', '10', '11', '12'], hint: 'Depois do 9!' },
+          { instruction: 'Complete a subtração:', emoji: '🧁', parts: ['6', '-', '1', '=', '?'], answer: '5', options: ['4', '5', '6', '7'], hint: 'Antes do 6!' },
+          { instruction: 'Complete a soma:', emoji: '🎀', parts: ['4', '+', '?', '=', '9'], answer: '5', options: ['3', '4', '5', '6'], hint: '4 + 5 = 9!' },
+        ],
+        matCompare: [
+          { left: '8', right: '5', emoji: '🍓', sym: '>', hint: '8 é maior que 5!' },
+          { left: '3', right: '7', emoji: '🍬', sym: '<', hint: '3 é menor que 7!' },
+          { left: '4', right: '4', emoji: '⭐', sym: '=', hint: 'Iguais!' },
+          { left: '2 + 3', right: '5', emoji: '🧁', sym: '=', hint: '2 + 3 = 5!' },
+          { left: '10', right: '6', emoji: '🎈', sym: '>', hint: '10 é maior que 6!' },
+          { left: '1 + 2', right: '6', emoji: '🍪', sym: '<', hint: '3 é menor que 6!' },
+          { left: '9', right: '4', emoji: '🌸', sym: '>', hint: '9 é maior que 4!' },
+          { left: '5 - 1', right: '4', emoji: '🎀', sym: '=', hint: '4 = 4!' },
+          { left: '2', right: '8', emoji: '🍒', sym: '<', hint: '2 é menor que 8!' },
+          { left: '7 + 1', right: '6', emoji: '🍭', sym: '>', hint: '8 é maior que 6!' },
+        ],
+      },
+      {
+        id: 2, title: '2º Ano', subtitle: 'Sílabas, Antônimos e Dezenas', mascot: 'Lulu Nuvem',
+        cardBg: '#8AD4FF', cardBorder: '#1F90E0', accentBg: '#EAF6FF', accentText: '#0D4A7A',
+        ptTopics: 'Sílabas · Plural · Antônimos', matTopics: 'Adição/Subtração · Dobro · Dezenas',
+        ptQuiz: [
+          { prompt: 'Qual é o plural da palavra FLOR?', emoji: '🌸', options: ['FLORES', 'FLORS', 'FLORZES', 'FLORA'], correct: 0, hint: 'Terminadas em R ganham -ES.' },
+          { prompt: 'Qual é o contrário de QUENTE?', emoji: '🍦', options: ['MORNO', 'FRIO', 'DOCE', 'GRANDE'], correct: 1, hint: 'O sorvete é...' },
+          { prompt: 'Qual palavra usa NH corretamente?', emoji: '🐥', options: ['PASSARINO', 'PASSARINHO', 'PASARINHO', 'PASSARINIO'], correct: 1, hint: 'Termina com -inho!' },
+          { prompt: 'Quantas sílabas tem BOR-BO-LE-TA?', emoji: '🦋', options: ['2', '3', '4', '5'], correct: 2, hint: 'BOR - BO - LE - TA.' },
+          { prompt: 'Qual palavra está no diminutivo?', emoji: '🎀', options: ['LAÇO', 'LAÇÃO', 'LACINHO', 'LAÇOS'], correct: 2, hint: 'Algo pequenininho!' },
+          { prompt: 'Qual é o contrário de GRANDE?', emoji: '🐭', options: ['ENORME', 'ALTO', 'PEQUENO', 'LARGO'], correct: 2, hint: 'Como um ratinho!' },
+          { prompt: 'Qual é o plural de BALÃO?', emoji: '🎈', options: ['BALÃOS', 'BALÕES', 'BALÃES', 'BALÃOZES'], correct: 1, hint: 'Muitos balões!' },
+          { prompt: 'Qual palavra está no aumentativo?', emoji: '🐶', options: ['CACHORRINHO', 'CACHORRO', 'CACHORRÃO', 'CACHORROS'], correct: 2, hint: 'Termina com -ÃO!' },
+          { prompt: 'Qual palavra tem LH?', emoji: '🐰', options: ['COELHO', 'GALINHA', 'CHAVE', 'CARRO'], correct: 0, hint: 'COE-LHO!' },
+          { prompt: 'Qual é o sinônimo de ALEGRE?', emoji: '😊', options: ['TRISTE', 'FELIZ', 'BRAVO', 'CANSADO'], correct: 1, hint: 'Mesmo sentido!' },
+        ],
+        ptBuilder: [
+          { instruction: 'Monte a palavra:', emoji: '🦋', mode: 'syllables', answer: 'BORBOLETA', target: ['BOR', 'BO', 'LE', 'TA'], tiles: ['LE', 'BOR', 'TA', 'BO'], hint: 'BOR-BO-LE-TA!' },
+          { instruction: 'Complete o dígrafo:', emoji: '🐰', mode: 'missing', prefix: 'COE', suffix: 'O', answer: 'LH', tiles: ['LH', 'NH', 'CH', 'RR'], hint: 'COE-LHO!' },
+          { instruction: 'Monte o doce:', emoji: '🍫', mode: 'syllables', answer: 'CHOCOLATE', target: ['CHO', 'CO', 'LA', 'TE'], tiles: ['LA', 'CHO', 'TE', 'CO'], hint: 'CHO-CO-LA-TE!' },
+          { instruction: 'Complete a letra:', emoji: '🍓', mode: 'missing', prefix: 'MO', suffix: 'ANGO', answer: 'R', tiles: ['R', 'L', 'S', 'N'], hint: 'MO-RAN-GO!' },
+          { instruction: 'Ordene as sílabas:', emoji: '🌈', mode: 'syllables', answer: 'COLORIDO', target: ['CO', 'LO', 'RI', 'DO'], tiles: ['RI', 'CO', 'DO', 'LO'], hint: 'CO-LO-RI-DO!' },
+          { instruction: 'Complete com NH ou LH:', emoji: '🐔', mode: 'missing', prefix: 'GALI', suffix: 'A', answer: 'NH', tiles: ['NH', 'LH', 'CH', 'SS'], hint: 'GA-LI-NHA!' },
+          { instruction: 'Ordene as sílabas:', emoji: '🍍', mode: 'syllables', answer: 'ABACAXI', target: ['A', 'BA', 'CA', 'XI'], tiles: ['CA', 'A', 'XI', 'BA'], hint: 'A-BA-CA-XI!' },
+          { instruction: 'Complete o plural:', emoji: '🌸', mode: 'missing', prefix: 'FLOR', suffix: '', answer: 'ES', tiles: ['S', 'ES', 'IS', 'ÃOS'], hint: 'FLOR-ES!' },
+          { instruction: 'Ordene as sílabas:', emoji: '🐢', mode: 'syllables', answer: 'TARTARUGA', target: ['TAR', 'TA', 'RU', 'GA'], tiles: ['RU', 'TAR', 'GA', 'TA'], hint: 'TAR-TA-RU-GA!' },
+          { instruction: 'Complete com CH ou X:', emoji: '☔', mode: 'missing', prefix: '', suffix: 'UVA', answer: 'CH', tiles: ['CH', 'X', 'S', 'Z'], hint: 'CHU-VA!' },
+        ],
+        ptTrueFalse: [
+          { statement: 'O contrário de CLARO é ESCURO.', emoji: '🌙', isTrue: true, explanation: 'São antônimos!' },
+          { statement: 'O plural de PÃO é PÃOS.', emoji: '🥖', isTrue: false, explanation: 'O plural é PÃES!' },
+          { statement: 'COZINHA se escreve com NH.', emoji: '🍳', isTrue: true, explanation: 'Sim! CO-ZI-NHA.' },
+          { statement: 'CASINHA está no aumentativo.', emoji: '🏡', isTrue: false, explanation: 'Está no diminutivo!' },
+          { statement: 'SORVETE tem 3 sílabas.', emoji: '🍨', isTrue: true, explanation: 'SOR-VE-TE!' },
+          { statement: 'BONITO e LINDO são sinônimos.', emoji: '✨', isTrue: true, explanation: 'Têm sentidos parecidos!' },
+          { statement: 'MENINA está no masculino.', emoji: '👧', isTrue: false, explanation: 'Está no feminino!' },
+          { statement: 'CHOCOLATE começa com CHO.', emoji: '🍫', isTrue: true, explanation: 'CHO-CO-LA-TE!' },
+          { statement: 'O contrário de RÁPIDO é VELOZ.', emoji: '🐇', isTrue: false, explanation: 'O contrário é LENTO!' },
+          { statement: 'Nomes de pessoas começam com maiúscula.', emoji: '📝', isTrue: true, explanation: 'Sempre!' },
+        ],
+        ptMatch: [
+          [{ id: '2pa', left: 'Quente', right: 'Frio' }, { id: '2pb', left: 'Grande', right: 'Pequeno' }, { id: '2pc', left: 'Alegre', right: 'Triste' }, { id: '2pd', left: 'Dia', right: 'Noite' }, { id: '2pe', left: 'Alto', right: 'Baixo' }],
+          [{ id: '2pf', left: '1 Flor', right: 'Flores' }, { id: '2pg', left: '1 Balão', right: 'Balões' }, { id: '2ph', left: '1 Pão', right: 'Pães' }, { id: '2pi', left: '1 Gato', right: 'Gatos' }, { id: '2pj', left: '1 Peixe', right: 'Peixes' }],
+        ],
+        matQuiz: [
+          { prompt: 'Quanto é 12 + 7?', emoji: '🍭', options: ['18', '19', '20', '17'], correct: 1, hint: '10 + 9 = 19!' },
+          { prompt: 'Qual é o DOBRO de 6?', emoji: '🍒', options: ['8', '10', '12', '14'], correct: 2, hint: '6 + 6!' },
+          { prompt: 'Havia 20 biscoitos e comemos 5. Quantos sobraram?', emoji: '🍪', options: ['14', '15', '16', '13'], correct: 1, hint: '20 - 5!' },
+          { prompt: 'Quantas unidades formam 2 dezenas?', emoji: '🌟', options: ['10', '12', '20', '22'], correct: 2, hint: '10 + 10!' },
+          { prompt: 'Qual é a METADE de 14?', emoji: '🧁', options: ['6', '7', '8', '9'], correct: 1, hint: '14 ÷ 2!' },
+          { prompt: 'Quanto é 25 + 15?', emoji: '🍬', options: ['30', '35', '40', '45'], correct: 2, hint: '40!' },
+          { prompt: 'Qual é o DOBRO de 8?', emoji: '🍓', options: ['14', '16', '18', '12'], correct: 1, hint: '8 + 8!' },
+          { prompt: 'Quantos dias tem 1 semana?', emoji: '📅', options: ['5', '6', '7', '10'], correct: 2, hint: 'Segunda a domingo!' },
+          { prompt: 'Quanto é 38 - 8?', emoji: '🎈', options: ['28', '30', '32', '20'], correct: 1, hint: '3 dezenas!' },
+          { prompt: 'Qual número tem 3 dezenas e 4 unidades?', emoji: '🔢', options: ['43', '34', '304', '13'], correct: 1, hint: '30 + 4!' },
+        ],
+        matMatch: [
+          [{ id: '2a', left: '10 + 5', right: '15' }, { id: '2b', left: 'Dobro de 4', right: '8' }, { id: '2c', left: '20 - 6', right: '14' }, { id: '2d', left: 'Metade de 10', right: '5' }, { id: '2e', left: '12 + 7', right: '19' }],
+          [{ id: '2f', left: '1 dezena', right: '10' }, { id: '2g', left: '18 + 2', right: '20' }, { id: '2h', left: 'Dobro de 9', right: '18' }, { id: '2i', left: '30 - 5', right: '25' }, { id: '2j', left: 'Metade de 12', right: '6' }],
+        ],
+        matMissing: [
+          { instruction: 'Complete a soma:', emoji: '🍭', parts: ['10', '+', '?', '=', '17'], answer: '7', options: ['5', '6', '7', '8'], hint: '10 + 7!' },
+          { instruction: 'De 2 em 2:', emoji: '🐰', parts: ['2,', '4,', '6,', '?', ', 10'], answer: '8', options: ['7', '8', '9', '12'], hint: '6 + 2!' },
+          { instruction: 'Complete a subtração:', emoji: '🍪', parts: ['20', '-', '?', '=', '15'], answer: '5', options: ['3', '4', '5', '6'], hint: '20 - 5!' },
+          { instruction: 'De 5 em 5:', emoji: '⭐', parts: ['5,', '10,', '?', ', 20'], answer: '15', options: ['12', '14', '15', '18'], hint: '10 + 5!' },
+          { instruction: 'Dobro de 7:', emoji: '🍒', parts: ['7', '+', '7', '=', '?'], answer: '14', options: ['12', '14', '15', '16'], hint: '14!' },
+          { instruction: 'Complete a soma:', emoji: '🧁', parts: ['?', '+', '8', '=', '18'], answer: '10', options: ['8', '9', '10', '12'], hint: '1 dezena!' },
+          { instruction: 'De 10 em 10:', emoji: '🎈', parts: ['10,', '20,', '30,', '?'], answer: '40', options: ['35', '40', '45', '50'], hint: '4 dezenas!' },
+          { instruction: 'Complete a subtração:', emoji: '🍓', parts: ['16', '-', '?', '=', '10'], answer: '6', options: ['4', '5', '6', '7'], hint: 'Tire 6!' },
+          { instruction: 'Complete a soma:', emoji: '🎀', parts: ['25', '+', '?', '=', '30'], answer: '5', options: ['4', '5', '6', '10'], hint: '25 + 5!' },
+          { instruction: 'Complete a soma:', emoji: '🍰', parts: ['10', '+', '10', '=', '?'], answer: '20', options: ['15', '20', '25', '30'], hint: '2 dezenas!' },
+        ],
+        matCompare: [
+          { left: '18', right: '12', emoji: '🍭', sym: '>', hint: '18 é maior!' },
+          { left: '10 + 5', right: '15', emoji: '⭐', sym: '=', hint: 'Iguais a 15!' },
+          { left: '20 - 4', right: '19', emoji: '🍪', sym: '<', hint: '16 é menor que 19!' },
+          { left: 'Dobro de 5', right: '8', emoji: '🍒', sym: '>', hint: '10 é maior que 8!' },
+          { left: '14', right: '24', emoji: '🧁', sym: '<', hint: '14 é menor que 24!' },
+          { left: 'Metade de 16', right: '8', emoji: '🍓', sym: '=', hint: '8 = 8!' },
+          { left: '30', right: '29', emoji: '🎈', sym: '>', hint: '30 é maior!' },
+          { left: '12 + 3', right: '20', emoji: '🌸', sym: '<', hint: '15 é menor!' },
+          { left: '2 dezenas', right: '20', emoji: '🎀', sym: '=', hint: '20 = 20!' },
+          { left: '25 - 5', right: '15', emoji: '🍬', sym: '>', hint: '20 é maior que 15!' },
+        ],
+      },
+      {
+        id: 3, title: '3º Ano', subtitle: 'Ortografia, Gramática e Tabuada', mascot: 'Pudim Estrela',
+        cardBg: '#FFE066', cardBorder: '#E59F00', accentBg: '#FFF8DA', accentText: '#6B4800',
+        ptTopics: 'M antes de P/B · Adjetivos · SS/RR', matTopics: 'Tabuada · Centenas · Horas',
+        ptQuiz: [
+          { prompt: 'Qual palavra usa M antes de P ou B?', emoji: '🥁', options: ['TANBOR', 'TAMBOR', 'BOMBOM', 'TAMBOR e BOMBOM'], correct: 3, hint: 'Antes de P e B usamos M!' },
+          { prompt: 'Em "O gatinho fofo dormiu", qual palavra é ADJETIVO?', emoji: '😺', options: ['gatinho', 'dormiu', 'fofo', 'O'], correct: 2, hint: 'Qualidade do gatinho!' },
+          { prompt: 'Complete: "O ___ canta no jardim."', emoji: '🐦', options: ['PÁSARO', 'PÁSSARO', 'PAÇARO', 'PÁZARO'], correct: 1, hint: 'Usa SS!' },
+          { prompt: 'Qual é um SUBSTANTIVO PRÓPRIO?', emoji: '🏙️', options: ['cidade', 'caderno', 'Brasil', 'nuvem'], correct: 2, hint: 'Maiúscula!' },
+          { prompt: 'Qual é o coletivo de PEIXES?', emoji: '🐟', options: ['ENXAME', 'CARDUME', 'ALCATEIA', 'REBANHO'], correct: 1, hint: 'Peixes no mar!' },
+          { prompt: 'Qual palavra é um VERBO?', emoji: '🏃', options: ['mesa', 'correr', 'azul', 'estrela'], correct: 1, hint: 'Indica ação!' },
+          { prompt: 'Qual palavra usa RR corretamente?', emoji: '🐶', options: ['CACHORO', 'CACHORRO', 'CAXORRO', 'CACHORU'], correct: 1, hint: 'Som forte entre vogais!' },
+          { prompt: 'Qual é o coletivo de ABELHAS?', emoji: '🐝', options: ['BANDO', 'ENXAME', 'MATILHA', 'CONSTELAÇÃO'], correct: 1, hint: 'Abelhas juntas!' },
+          { prompt: 'Em "A flor cheirosa abriu", qual é o SUBSTANTIVO?', emoji: '🌷', options: ['A', 'flor', 'cheirosa', 'abriu'], correct: 1, hint: 'Nome do ser!' },
+          { prompt: 'Qual palavra usa N antes de T?', emoji: '🐘', options: ['ELEFAMTE', 'ELEFANTE', 'ELEFANTI', 'ELEFAMTI'], correct: 1, hint: 'Não é P nem B!' },
+        ],
+        ptBuilder: [
+          { instruction: 'Complete antes do P:', emoji: '⛺', mode: 'missing', prefix: 'CA', suffix: 'PO', answer: 'M', tiles: ['N', 'M', 'S', 'L'], hint: 'M antes de P!' },
+          { instruction: 'Complete para som forte:', emoji: '🚗', mode: 'missing', prefix: 'CA', suffix: 'O', answer: 'RR', tiles: ['R', 'RR', 'S', 'SS'], hint: 'CAR-RO!' },
+          { instruction: 'Ordene as sílabas:', emoji: '🌻', mode: 'syllables', answer: 'GIRASSOL', target: ['GI', 'RAS', 'SOL'], tiles: ['SOL', 'GI', 'RAS', 'CA'], hint: 'GI-RAS-SOL!' },
+          { instruction: 'Complete com CH ou X:', emoji: '🔑', mode: 'missing', prefix: '', suffix: 'AVE', answer: 'CH', tiles: ['X', 'CH', 'S', 'Z'], hint: 'CHA-VE!' },
+          { instruction: 'Monte a palavra:', emoji: '📚', mode: 'syllables', answer: 'CADERNO', target: ['CA', 'DER', 'NO'], tiles: ['NO', 'CA', 'DER', 'BO'], hint: 'CA-DER-NO!' },
+          { instruction: 'Complete antes do B:', emoji: '🍬', mode: 'missing', prefix: 'BO', suffix: 'BOM', answer: 'M', tiles: ['M', 'N', 'R', 'S'], hint: 'M antes de B!' },
+          { instruction: 'Complete com S ou SS:', emoji: '🦴', mode: 'missing', prefix: 'O', suffix: 'O', answer: 'SS', tiles: ['S', 'SS', 'Ç', 'Z'], hint: 'O-SSO!' },
+          { instruction: 'Ordene as sílabas:', emoji: '⭐', mode: 'syllables', answer: 'ESTRELA', target: ['ES', 'TRE', 'LA'], tiles: ['LA', 'ES', 'TRE', 'SO'], hint: 'ES-TRE-LA!' },
+          { instruction: 'Complete antes do D:', emoji: '🌍', mode: 'missing', prefix: 'MU', suffix: 'DO', answer: 'N', tiles: ['M', 'N', 'L', 'R'], hint: 'MUN-DO!' },
+          { instruction: 'Ordene o coletivo de estrelas:', emoji: '🌌', mode: 'syllables', answer: 'CONSTELAÇÃO', target: ['CONS', 'TE', 'LA', 'ÇÃO'], tiles: ['LA', 'CONS', 'ÇÃO', 'TE'], hint: 'CONS-TE-LA-ÇÃO!' },
+        ],
+        ptTrueFalse: [
+          { statement: 'Antes de P e B sempre escrevemos M.', emoji: '🥁', isTrue: true, explanation: 'Regra certa!' },
+          { statement: '"São Paulo" é substantivo comum.', emoji: '🏙️', isTrue: false, explanation: 'É substantivo PRÓPRIO!' },
+          { statement: 'Em "menino feliz", "feliz" é adjetivo.', emoji: '😄', isTrue: true, explanation: 'É uma qualidade!' },
+          { statement: 'Grupo de lobos se chama ALCATEIA.', emoji: '🐺', isTrue: true, explanation: 'Certinho!' },
+          { statement: 'PÁSSARO se escreve com apenas um S.', emoji: '🐦', isTrue: false, explanation: 'Usa SS!' },
+          { statement: 'A palavra "pular" é um verbo.', emoji: '🤸', isTrue: true, explanation: 'Indica ação!' },
+          { statement: 'Nenhuma palavra começa com RR.', emoji: '🔤', isTrue: true, explanation: 'No início usa só um R!' },
+          { statement: 'Coletivo de estrelas é CARDUME.', emoji: '⭐', isTrue: false, explanation: 'É CONSTELAÇÃO!' },
+          { statement: 'DOCE tem 2 sílabas.', emoji: '🍬', isTrue: true, explanation: 'DO-CE!' },
+          { statement: 'BOMBA se escreve BONBA.', emoji: '💣', isTrue: false, explanation: 'Antes de B usa M!' },
+        ],
+        ptMatch: [
+          [{ id: '3pa', left: 'Peixes', right: 'Cardume' }, { id: '3pb', left: 'Abelhas', right: 'Enxame' }, { id: '3pc', left: 'Estrelas', right: 'Constelação' }, { id: '3pd', left: 'Lobos', right: 'Alcateia' }, { id: '3pe', left: 'Ovelhas', right: 'Rebanho' }],
+          [{ id: '3pf', left: 'Correr', right: 'Verbo' }, { id: '3pg', left: 'Carinhoso', right: 'Adjetivo' }, { id: '3ph', left: 'Brasil', right: 'Subst. Próprio' }, { id: '3pi', left: 'Caderno', right: 'Subst. Comum' }, { id: '3pj', left: 'Gatinho', right: 'Diminutivo' }],
+        ],
+        matQuiz: [
+          { prompt: 'Quanto é 4 × 5?', emoji: '🎀', options: ['15', '20', '25', '18'], correct: 1, hint: '5 + 5 + 5 + 5!' },
+          { prompt: 'Em 1 caixa há 3 bombons. Em 6 caixas há quantos?', emoji: '🍬', options: ['15', '16', '18', '21'], correct: 2, hint: '6 × 3!' },
+          { prompt: '1 centena + 2 dezenas + 4 unidades = ?', emoji: '🔢', options: ['142', '214', '124', '104'], correct: 2, hint: '100 + 20 + 4!' },
+          { prompt: 'Quanto é 250 + 150?', emoji: '🧁', options: ['300', '350', '400', '450'], correct: 2, hint: '400!' },
+          { prompt: 'Quantos minutos tem 1 hora?', emoji: '⏰', options: ['30', '45', '60', '100'], correct: 2, hint: '60 minutos!' },
+          { prompt: 'Quanto é 3 × 7?', emoji: '🍓', options: ['18', '21', '24', '27'], correct: 1, hint: '7 + 7 + 7!' },
+          { prompt: 'Qual é o triplo de 5?', emoji: '⭐', options: ['10', '15', '20', '25'], correct: 1, hint: '3 × 5!' },
+          { prompt: 'Quanto é 500 - 200?', emoji: '🎈', options: ['200', '250', '300', '350'], correct: 2, hint: '300!' },
+          { prompt: 'Quanto é 2 × 9?', emoji: '🌸', options: ['16', '18', '20', '14'], correct: 1, hint: '9 + 9!' },
+          { prompt: 'Quantos meses tem 1 ano?', emoji: '📅', options: ['10', '12', '14', '6'], correct: 1, hint: '12 meses!' },
+        ],
+        matMatch: [
+          [{ id: '3a', left: '3 × 4', right: '12' }, { id: '3b', left: '5 × 5', right: '25' }, { id: '3c', left: '2 × 9', right: '18' }, { id: '3d', left: '4 × 7', right: '28' }, { id: '3e', left: '3 × 9', right: '27' }],
+          [{ id: '3f', left: '1 centena', right: '100' }, { id: '3g', left: '3 × 8', right: '24' }, { id: '3h', left: '150 + 50', right: '200' }, { id: '3i', left: '5 × 6', right: '30' }, { id: '3j', left: '4 × 9', right: '36' }],
+        ],
+        matMissing: [
+          { instruction: 'Complete a tabuada:', emoji: '🎀', parts: ['3', '×', '?', '=', '15'], answer: '5', options: ['3', '4', '5', '6'], hint: '3 × 5!' },
+          { instruction: 'Complete a soma:', emoji: '🧁', parts: ['100', '+', '?', '=', '300'], answer: '200', options: ['100', '150', '200', '250'], hint: '2 centenas!' },
+          { instruction: 'Complete a tabuada:', emoji: '🍓', parts: ['4', '×', '?', '=', '24'], answer: '6', options: ['5', '6', '7', '8'], hint: '4 × 6!' },
+          { instruction: 'Tabuada do 3:', emoji: '⭐', parts: ['3,', '6,', '9,', '?', ', 15'], answer: '12', options: ['10', '11', '12', '13'], hint: '9 + 3!' },
+          { instruction: 'Tabuada do 5:', emoji: '🍬', parts: ['5', '×', '8', '=', '?'], answer: '40', options: ['35', '40', '45', '50'], hint: '40!' },
+          { instruction: 'Complete a subtração:', emoji: '🎈', parts: ['400', '-', '?', '=', '250'], answer: '150', options: ['100', '150', '200', '250'], hint: '150!' },
+          { instruction: 'Complete a tabuada:', emoji: '🌸', parts: ['?', '×', '7', '=', '14'], answer: '2', options: ['2', '3', '4', '5'], hint: 'Dobro de 7!' },
+          { instruction: 'Triplo de 10:', emoji: '🐣', parts: ['3', '×', '10', '=', '?'], answer: '30', options: ['20', '25', '30', '35'], hint: '30!' },
+          { instruction: 'De 100 em 100:', emoji: '🔢', parts: ['200,', '300,', '?', ', 500'], answer: '400', options: ['350', '400', '450', '600'], hint: '400!' },
+          { instruction: 'Complete a tabuada:', emoji: '🍰', parts: ['4', '×', '8', '=', '?'], answer: '32', options: ['28', '30', '32', '36'], hint: '32!' },
+        ],
+        matCompare: [
+          { left: '3 × 5', right: '12', emoji: '🎀', sym: '>', hint: '15 > 12!' },
+          { left: '4 × 5', right: '20', emoji: '⭐', sym: '=', hint: '20 = 20!' },
+          { left: '2 × 8', right: '20', emoji: '🍬', sym: '<', hint: '16 < 20!' },
+          { left: '150 + 150', right: '300', emoji: '🧁', sym: '=', hint: '300 = 300!' },
+          { left: '5 × 7', right: '30', emoji: '🍓', sym: '>', hint: '35 > 30!' },
+          { left: '1 centena', right: '99', emoji: '🔢', sym: '>', hint: '100 > 99!' },
+          { left: '3 × 4', right: '2 × 6', emoji: '🎈', sym: '=', hint: '12 = 12!' },
+          { left: '4 × 4', right: '18', emoji: '🌸', sym: '<', hint: '16 < 18!' },
+          { left: '1 hora', right: '45 min', emoji: '⏰', sym: '>', hint: '60 > 45!' },
+          { left: '500 - 100', right: '450', emoji: '🍰', sym: '<', hint: '400 < 450!' },
+        ],
+      },
+      {
+        id: 4, title: '4º Ano', subtitle: 'Interpretação, Acentuação e Divisão', mascot: 'Menta Sorriso',
+        cardBg: '#8AEBC0', cardBorder: '#19A86A', accentBg: '#E9FFF4', accentText: '#0B5536',
+        ptTopics: 'Interpretação · Acentuação · Verbos', matTopics: 'Divisão · Tabuada · Perímetro',
+        ptQuiz: [
+          { passage: '"Todo sábado, Clara faz panquecas de banana e divide com sua irmã no jardim."', prompt: 'Com quem Clara divide as panquecas?', emoji: '🥞', options: ['Com a professora', 'Com sua irmã', 'Com o vizinho', 'Sozinha'], correct: 1, hint: 'Releia o final da frase!' },
+          { prompt: 'Qual palavra proparoxítona leva acento agudo?', emoji: '🎵', options: ['CADERNO', 'MÚSICA', 'JANELA', 'BONECA'], correct: 1, hint: 'MÚ-si-ca!' },
+          { prompt: 'Em "Ontem nós brincamos", o verbo está no:', emoji: '🎠', options: ['Presente', 'Futuro', 'Passado', 'Imperativo'], correct: 2, hint: '"Ontem" já aconteceu!' },
+          { prompt: 'Qual pontuação termina uma pergunta?', emoji: '❓', options: ['Ponto final (.)', 'Exclamação (!)', 'Interrogação (?)', 'Vírgula (,)'], correct: 2, hint: 'Orelhinha curiosa!' },
+          { prompt: 'Qual palavra usa Ç corretamente?', emoji: '💖', options: ['CORASÃO', 'CORAÇÃO', 'CORASSÃO', 'CORAZÃO'], correct: 1, hint: 'Ç antes de A, O, U!' },
+          { prompt: 'Qual palavra é OXÍTONA?', emoji: '☕', options: ['CAFÉ', 'ÁRVORE', 'CADERNO', 'LÁPIS'], correct: 0, hint: 'Última sílaba forte!' },
+          { prompt: 'Qual pronome substitui "Eu e meus amigos"?', emoji: '👧👦', options: ['Eles', 'Nós', 'Você', 'Ela'], correct: 1, hint: 'Você faz parte!' },
+          { prompt: 'Em "Amanhã faremos um piquenique", o verbo está no:', emoji: '🧺', options: ['Passado', 'Presente', 'Futuro', 'Infinitivo'], correct: 2, hint: '"Amanhã"!' },
+          { prompt: 'Qual pontuação expressa admiração?', emoji: '🤩', options: ['Ponto final (.)', 'Exclamação (!)', 'Interrogação (?)', 'Dois pontos (:)'], correct: 1, hint: 'Tracinho com ponto!' },
+          { prompt: 'Qual palavra tem acento circunflexo (^)?', emoji: '🚌', options: ['ÔNIBUS', 'SOFÁ', 'ÁGUA', 'CHÁ'], correct: 0, hint: 'Chapeuzinho!' },
+        ],
+        ptBuilder: [
+          { instruction: 'Complete no futuro:', emoji: '🚀', mode: 'missing', prefix: 'Amanhã nós ', suffix: ' ao museu.', answer: 'iremos', tiles: ['fomos', 'iremos', 'fui', 'brincava'], hint: 'Amanhã!' },
+          { instruction: 'Complete a letra:', emoji: '🍬', mode: 'missing', prefix: 'A', suffix: 'ÚCAR', answer: 'Ç', tiles: ['S', 'SS', 'Ç', 'Z'], hint: 'Antes de U usamos Ç!' },
+          { instruction: 'Monte a palavra:', emoji: '⚡', mode: 'syllables', answer: 'LÂMPADA', target: ['LÂM', 'PA', 'DA'], tiles: ['DA', 'LÂM', 'PA', 'LA'], hint: 'LÂM-PA-DA!' },
+          { instruction: 'Sinônimo de FELIZ:', emoji: '😊', mode: 'missing', prefix: 'O coelho ficou ', suffix: '!', answer: 'alegre', tiles: ['triste', 'alegre', 'bravo', 'cansado'], hint: 'Sentido parecido!' },
+          { instruction: 'Complete a sílaba:', emoji: '✉️', mode: 'missing', prefix: 'MEN', suffix: 'GEM', answer: 'SA', tiles: ['SA', 'ZA', 'ÇA', 'SSA'], hint: 'MEN-SA-GEM!' },
+          { instruction: 'Monte a palavra:', emoji: '🌳', mode: 'syllables', answer: 'ÁRVORE', target: ['ÁR', 'VO', 'RE'], tiles: ['RE', 'ÁR', 'VO', 'CA'], hint: 'ÁR-VO-RE!' },
+          { instruction: 'Complete no passado:', emoji: '📖', mode: 'missing', prefix: 'Ontem eu ', suffix: ' um livro.', answer: 'li', tiles: ['li', 'lerei', 'vou ler', 'lê'], hint: 'Ontem!' },
+          { instruction: 'Complete com pronome:', emoji: '🎀', mode: 'missing', prefix: '', suffix: ' gostamos de aprender.', answer: 'Nós', tiles: ['Eu', 'Tu', 'Nós', 'Ele'], hint: 'Combina com gostamos!' },
+          { instruction: 'Monte a palavra:', emoji: '❓', mode: 'syllables', answer: 'INTERROGAÇÃO', target: ['IN', 'TER', 'RO', 'GA', 'ÇÃO'], tiles: ['GA', 'IN', 'ÇÃO', 'TER', 'RO'], hint: 'IN-TER-RO-GA-ÇÃO!' },
+          { instruction: 'Complete a palavra:', emoji: '🏥', mode: 'missing', prefix: 'HOSPI', suffix: 'L', answer: 'TA', tiles: ['TA', 'DA', 'CA', 'LA'], hint: 'HOS-PI-TAL!' },
+        ],
+        ptTrueFalse: [
+          { statement: 'Todas as proparoxítonas são acentuadas.', emoji: '🎵', isTrue: true, explanation: 'Sempre acentuadas!' },
+          { statement: 'Ponto de exclamação (?) faz perguntas.', emoji: '❓', isTrue: false, explanation: 'Perguntas usam interrogação (?)!' },
+          { statement: '"Estudaremos" está no futuro.', emoji: '🚀', isTrue: true, explanation: 'Ainda vai acontecer!' },
+          { statement: 'Usamos Ç antes de E e I.', emoji: '🔤', isTrue: false, explanation: 'Só antes de A, O, U!' },
+          { statement: 'CAFÉ é uma palavra oxítona.', emoji: '☕', isTrue: true, explanation: 'Última sílaba forte!' },
+          { statement: 'Verbos no passado já aconteceram.', emoji: '⏳', isTrue: true, explanation: 'Sim!' },
+          { statement: 'LÂMPADA leva acento agudo.', emoji: '💡', isTrue: false, explanation: 'Leva circunflexo (^)!' },
+          { statement: '"Rápido" e "veloz" são antônimos.', emoji: '⚡', isTrue: false, explanation: 'São sinônimos!' },
+          { statement: '"Elas" está no plural e feminino.', emoji: '👧', isTrue: true, explanation: 'Certinho!' },
+          { statement: 'Em CORAÇÃO o til vai sobre o A.', emoji: '💖', isTrue: true, explanation: 'Som nasal -ÃO!' },
+        ],
+        ptMatch: [
+          [{ id: '4pa', left: 'Ontem brinquei', right: 'Passado' }, { id: '4pb', left: 'Hoje brinco', right: 'Presente' }, { id: '4pc', left: 'Amanhã brincarei', right: 'Futuro' }, { id: '4pd', left: 'Que legal!', right: 'Exclamação' }, { id: '4pe', left: 'Onde você vai?', right: 'Interrogação' }],
+          [{ id: '4pf', left: 'MÚ-si-ca', right: 'Proparoxítona' }, { id: '4pg', left: 'Ca-FÉ', right: 'Oxítona' }, { id: '4ph', left: 'LÁ-pis', right: 'Paroxítona' }, { id: '4pi', left: 'Alegre / Feliz', right: 'Sinônimos' }, { id: '4pj', left: 'Claro / Escuro', right: 'Antônimos' }],
+        ],
+        matQuiz: [
+          { prompt: 'Quanto é 36 ÷ 4?', emoji: '🍩', options: ['7', '8', '9', '10'], correct: 2, hint: '9 × 4 = 36!' },
+          { prompt: 'Quadrado com lado de 5 cm. Qual o perímetro?', emoji: '🟦', options: ['10 cm', '15 cm', '20 cm', '25 cm'], correct: 2, hint: '5 + 5 + 5 + 5!' },
+          { prompt: 'Quanto é 8 × 7?', emoji: '🌟', options: ['54', '56', '58', '64'], correct: 1, hint: '56!' },
+          { prompt: 'Quantos vértices tem um pentágono?', emoji: '⬠', options: ['4', '5', '6', '8'], correct: 1, hint: 'Penta = 5!' },
+          { prompt: 'Quantos ml há em meio litro?', emoji: '🧃', options: ['250 ml', '500 ml', '750 ml', '100 ml'], correct: 1, hint: 'Metade de 1.000!' },
+          { prompt: 'Quanto é 9 × 6?', emoji: '🍓', options: ['48', '52', '54', '56'], correct: 2, hint: '54!' },
+          { prompt: 'Quanto é 48 ÷ 6?', emoji: '🧁', options: ['6', '7', '8', '9'], correct: 2, hint: '6 × 8 = 48!' },
+          { prompt: 'Quantos metros têm 2 km?', emoji: '🛣️', options: ['200 m', '1.200 m', '2.000 m', '20.000 m'], correct: 2, hint: '2 × 1.000!' },
+          { prompt: 'Quanto é 12 × 4?', emoji: '🍬', options: ['36', '44', '48', '52'], correct: 2, hint: '48!' },
+          { prompt: 'Triângulo com lados de 4 cm tem qual perímetro?', emoji: '🔺', options: ['8 cm', '10 cm', '12 cm', '16 cm'], correct: 2, hint: '4 + 4 + 4!' },
+        ],
+        matMatch: [
+          [{ id: '4a', left: '42 ÷ 6', right: '7' }, { id: '4b', left: '7 × 9', right: '63' }, { id: '4c', left: '81 ÷ 9', right: '9' }, { id: '4d', left: '6 × 8', right: '48' }, { id: '4e', left: '72 ÷ 8', right: '9 ' }],
+          [{ id: '4f', left: 'Perím. quad. 4cm', right: '16 cm' }, { id: '4g', left: '1.000 ml', right: '1 litro' }, { id: '4h', left: '56 ÷ 8', right: '7' }, { id: '4i', left: '12 × 3', right: '36' }, { id: '4j', left: '1 km', right: '1.000 m' }],
+        ],
+        matMissing: [
+          { instruction: 'Complete a divisão:', emoji: '🍩', parts: ['45', '÷', '?', '=', '9'], answer: '5', options: ['4', '5', '6', '7'], hint: '5 × 9 = 45!' },
+          { instruction: 'Complete a multiplicação:', emoji: '🌟', parts: ['7', '×', '?', '=', '49'], answer: '7', options: ['6', '7', '8', '9'], hint: '7 × 7!' },
+          { instruction: 'Complete a divisão:', emoji: '🧁', parts: ['64', '÷', '8', '=', '?'], answer: '8', options: ['6', '7', '8', '9'], hint: '8 × 8!' },
+          { instruction: 'Tabuada do 8:', emoji: '🟦', parts: ['8,', '16,', '24,', '?'], answer: '32', options: ['28', '30', '32', '36'], hint: '24 + 8!' },
+          { instruction: 'Complete:', emoji: '🍓', parts: ['9', '×', '?', '=', '72'], answer: '8', options: ['7', '8', '9', '6'], hint: '8 × 9 = 72!' },
+          { instruction: 'Metade de 1.000:', emoji: '🧃', parts: ['1.000', '÷', '2', '=', '?'], answer: '500', options: ['250', '500', '750', '200'], hint: '500!' },
+          { instruction: 'Perímetro quad. lado 6:', emoji: '📐', parts: ['6', '×', '4', '=', '?'], answer: '24', options: ['18', '20', '24', '28'], hint: '24!' },
+          { instruction: 'Complete a divisão:', emoji: '🍬', parts: ['?', '÷', '5', '=', '10'], answer: '50', options: ['40', '45', '50', '55'], hint: '5 × 10!' },
+          { instruction: 'Complete:', emoji: '🎀', parts: ['6', '×', '7', '=', '?'], answer: '42', options: ['36', '42', '48', '49'], hint: '42!' },
+          { instruction: 'Complete a soma:', emoji: '🔢', parts: ['1.200', '+', '?', '=', '2.000'], answer: '800', options: ['600', '700', '800', '900'], hint: '800!' },
+        ],
+        matCompare: [
+          { left: '8 × 7', right: '50', emoji: '🌟', sym: '>', hint: '56 > 50!' },
+          { left: '36 ÷ 4', right: '9', emoji: '🍩', sym: '=', hint: '9 = 9!' },
+          { left: '6 × 6', right: '40', emoji: '🟦', sym: '<', hint: '36 < 40!' },
+          { left: '1 litro', right: '1.000 ml', emoji: '🧃', sym: '=', hint: 'Iguais!' },
+          { left: '9 × 9', right: '80', emoji: '🍓', sym: '>', hint: '81 > 80!' },
+          { left: '48 ÷ 8', right: '7', emoji: '🧁', sym: '<', hint: '6 < 7!' },
+          { left: 'Perím. quad. 5cm', right: '20 cm', emoji: '📐', sym: '=', hint: '20 = 20!' },
+          { left: '2 km', right: '1.500 m', emoji: '🛣️', sym: '>', hint: '2.000 > 1.500!' },
+          { left: '7 × 4', right: '30', emoji: '🍬', sym: '<', hint: '28 < 30!' },
+          { left: '63 ÷ 7', right: '3 × 3', emoji: '🎀', sym: '=', hint: '9 = 9!' },
+        ],
+      },
+      {
+        id: 5, title: '5º Ano', subtitle: 'Produção Textual, Frações e Porcentagem', mascot: 'Lilás Celestial',
+        cardBg: '#C4A1FF', cardBorder: '#8548E8', accentBg: '#F4EDFF', accentText: '#3F1780',
+        ptTopics: 'Mas vs Mais · Concordância · Interpretação', matTopics: 'Frações · Porcentagem · Área',
+        ptQuiz: [
+          { passage: '"Embora estivesse chovendo, a feira aconteceu no pátio coberto."', prompt: 'Qual palavra indica contraste no início?', emoji: '📖', options: ['chovendo', 'Embora', 'pátio', 'coberto'], correct: 1, hint: 'Mesmo com a chuva!' },
+          { prompt: 'Qual frase usa MAS (porém) corretamente?', emoji: '🎀', options: ['Quero mas doces.', 'Estudei, mas fiquei com sono.', 'Correu mas rápido.', 'Temos mas livros.'], correct: 1, hint: 'Troque por porém!' },
+          { prompt: 'Qual frase tem concordância correta?', emoji: '🎶', options: ['As estrelas brilha.', 'Os passarinhos cantam.', 'As meninas chegou.', 'Nós vai jogar.'], correct: 1, hint: 'Plural + plural!' },
+          { prompt: 'Em "O bolo estava delicioso!", "delicioso" é:', emoji: '🎂', options: ['Verbo', 'Advérbio', 'Adjetivo', 'Pronome'], correct: 2, hint: 'Característica!' },
+          { prompt: 'Qual é o antônimo de GENEROSO?', emoji: '💝', options: ['BONDOSO', 'EGOÍSTA', 'CARINHOSO', 'ALEGRE'], correct: 1, hint: 'Quem não compartilha!' },
+          { prompt: 'Quando usamos MAIS (com I)?', emoji: '➕', options: ['Oposição', 'Quantidade ou intensidade', 'Só perguntas', 'Nomes'], correct: 1, hint: 'Sinal de +!' },
+          { prompt: 'Em "Ela falou calmamente", "calmamente" é:', emoji: '🕊️', options: ['Substantivo', 'Advérbio de modo', 'Pronome', 'Numeral'], correct: 1, hint: 'Modo como falou!' },
+          { prompt: 'Qual resposta usa "porque" corretamente?', emoji: '💬', options: ['Acertei por que estudei.', 'Acertei porque estudei.', 'Acertei porquê estudei.', 'Acertei por quê estudei.'], correct: 1, hint: 'Resposta junto e sem acento!' },
+          { prompt: 'Qual dupla está escrita corretamente?', emoji: '✨', options: ['Exceção e Pesquisa', 'Esceção e Pesquiza', 'Exessão e Pesquisa', 'Exceção e Pesquiza'], correct: 0, hint: 'Exceção / Pesquisa!' },
+          { prompt: 'Em "As flores perfumadas enfeitam o jardim", o núcleo do sujeito é:', emoji: '💐', options: ['perfumadas', 'flores', 'enfeitam', 'jardim'], correct: 1, hint: 'Quem enfeita?' },
+        ],
+        ptBuilder: [
+          { instruction: 'Complete com mas ou mais:', emoji: '🍓', mode: 'missing', prefix: 'Gosto de morango, ', suffix: ' hoje escolhi uva.', answer: 'mas', tiles: ['mas', 'mais', 'más', 'mal'], hint: 'Porém!' },
+          { instruction: 'Substitua "Lucas e Bia":', emoji: '👧👦', mode: 'missing', prefix: '', suffix: ' adoram jogos educativos.', answer: 'Eles', tiles: ['Ele', 'Ela', 'Eles', 'Eu'], hint: 'Plural!' },
+          { instruction: 'Monte a palavra:', emoji: '✨', mode: 'syllables', answer: 'EXCEÇÃO', target: ['EX', 'CE', 'ÇÃO'], tiles: ['ÇÃO', 'EX', 'CE', 'SÃO'], hint: 'EX-CE-ÇÃO!' },
+          { instruction: 'Complete a resposta:', emoji: '💬', mode: 'missing', prefix: 'Acertei ', suffix: ' li com atenção!', answer: 'porque', tiles: ['porque', 'por que', 'por quê', 'porquê'], hint: 'Junto sem acento!' },
+          { instruction: 'Complete a concordância:', emoji: '🌟', mode: 'missing', prefix: 'Todas as crianças ', suffix: ' o troféu.', answer: 'ganharam', tiles: ['ganhou', 'ganharam', 'ganha', 'ganharei'], hint: 'Plural!' },
+          { instruction: 'Complete com mais ou mas:', emoji: '📚', mode: 'missing', prefix: 'Quero ler ', suffix: ' livros!', answer: 'mais', tiles: ['mas', 'mais', 'más', 'mal'], hint: 'Quantidade!' },
+          { instruction: 'Complete a pergunta:', emoji: '❓', mode: 'missing', prefix: '', suffix: ' o céu é azul?', answer: 'Por que', tiles: ['Porque', 'Por que', 'Porquê', 'Por quê'], hint: 'Pergunta inicial!' },
+          { instruction: 'Monte o advérbio:', emoji: '🐢', mode: 'syllables', answer: 'DEVAGAR', target: ['DE', 'VA', 'GAR'], tiles: ['GAR', 'DE', 'VA', 'RO'], hint: 'DE-VA-GAR!' },
+          { instruction: 'Complete a concordância:', emoji: '🐦', mode: 'missing', prefix: 'Os pássaros ', suffix: ' alto.', answer: 'voam', tiles: ['voa', 'voam', 'voei', 'voava'], hint: 'Plural!' },
+          { instruction: 'Complete com S ou Z:', emoji: '🔍', mode: 'missing', prefix: 'PESQUI', suffix: 'A', answer: 'S', tiles: ['S', 'Z', 'Ç', 'SS'], hint: 'PES-QUI-SA!' },
+        ],
+        ptTrueFalse: [
+          { statement: '"Mas" tem o mesmo sentido de "porém".', emoji: '🎀', isTrue: true, explanation: 'Sim!' },
+          { statement: 'Perguntas iniciais usam "porque" junto.', emoji: '❓', isTrue: false, explanation: 'Usam "Por que" separado!' },
+          { statement: '"As meninas chegaram cedo" está correto.', emoji: '👧', isTrue: true, explanation: 'Concordância perfeita!' },
+          { statement: '"Mal" com L é o contrário de "bom".', emoji: '⚖️', isTrue: false, explanation: 'Mal é contrário de BEM!' },
+          { statement: '"Felizmente" é um advérbio.', emoji: '✨', isTrue: true, explanation: 'Sim!' },
+          { statement: '"Mais" indica soma ou quantidade.', emoji: '➕', isTrue: true, explanation: 'Certinho!' },
+          { statement: '"Nós vai ao cinema" está na norma padrão.', emoji: '🎬', isTrue: false, explanation: 'O correto é "Nós vamos"!' },
+          { statement: 'Exceção se escreve com XC e Ç.', emoji: '📝', isTrue: true, explanation: 'EX-CE-ÇÃO!' },
+          { statement: 'O antônimo de GENEROSO é BONDOSO.', emoji: '💝', isTrue: false, explanation: 'O antônimo é EGOÍSTA!' },
+          { statement: 'Pronomes substituem ou acompanham nomes.', emoji: '💬', isTrue: true, explanation: 'Exatamente!' },
+        ],
+        ptMatch: [
+          [{ id: '5pa', left: 'Mas (sem i)', right: 'Porém' }, { id: '5pb', left: 'Mais (com i)', right: 'Quantidade' }, { id: '5pc', left: 'Bem', right: 'Contrário de Mal' }, { id: '5pd', left: 'Bom', right: 'Contrário de Mau' }, { id: '5pe', left: 'Porque (junto)', right: 'Resposta' }],
+          [{ id: '5pf', left: 'Por que (separado)', right: 'Pergunta' }, { id: '5pg', left: 'Calmamente', right: 'Advérbio' }, { id: '5ph', left: 'Delicioso', right: 'Adjetivo' }, { id: '5pi', left: 'Estudar', right: 'Verbo' }, { id: '5pj', left: 'Nós', right: 'Pronome' }],
+        ],
+        matQuiz: [
+          { prompt: 'Qual fração representa 1 parte pintada de 4?', emoji: '🍰', options: ['1/2', '1/4', '2/4', '3/4'], correct: 1, hint: '1 em cima, 4 embaixo!' },
+          { prompt: 'Quanto é 50% de 80 figurinhas?', emoji: '🏷️', options: ['20', '30', '40', '50'], correct: 2, hint: 'Metade!' },
+          { prompt: 'Retângulo de 6 cm × 3 cm. Qual é a ÁREA?', emoji: '📐', options: ['9 cm²', '12 cm²', '18 cm²', '24 cm²'], correct: 2, hint: '6 × 3!' },
+          { prompt: '3 pedaços de 4 de uma barra é qual fração?', emoji: '🍫', options: ['1/4', '2/3', '3/4', '4/3'], correct: 2, hint: '3/4!' },
+          { prompt: 'Quanto é 25% de 100 estrelas?', emoji: '⭐', options: ['20', '25', '50', '75'], correct: 1, hint: '25!' },
+          { prompt: 'Fração que representa a metade:', emoji: '🍕', options: ['1/2', '1/3', '1/4', '2/4'], correct: 0, hint: '1 de 2!' },
+          { prompt: 'Quanto é 10% de 200?', emoji: '🍬', options: ['10', '20', '30', '40'], correct: 1, hint: '200 ÷ 10!' },
+          { prompt: 'Área de um quadrado de lado 5 cm:', emoji: '🟦', options: ['10 cm²', '20 cm²', '25 cm²', '30 cm²'], correct: 2, hint: '5 × 5!' },
+          { prompt: 'Quanto é 1,5 + 2,5?', emoji: '🍰', options: ['3,0', '3,5', '4,0', '4,5'], correct: 2, hint: '4,0!' },
+          { prompt: 'Quanto é 144 ÷ 12?', emoji: '🔢', options: ['10', '11', '12', '13'], correct: 2, hint: '12 × 12!' },
+        ],
+        matMatch: [
+          [{ id: '5a', left: '1/2', right: '50%' }, { id: '5b', left: '1/4', right: '25%' }, { id: '5c', left: '3/4', right: '75%' }, { id: '5d', left: '1 inteiro', right: '100%' }, { id: '5e', left: '1/10', right: '10%' }],
+          [{ id: '5f', left: 'Área 5×4', right: '20 cm²' }, { id: '5g', left: '144 ÷ 12', right: '12' }, { id: '5h', left: '50% de 60', right: '30' }, { id: '5i', left: '2,5 + 2,5', right: '5,0' }, { id: '5j', left: '25% de 40', right: '10' }],
+        ],
+        matMissing: [
+          { instruction: 'Complete a porcentagem:', emoji: '⭐', parts: ['50%', 'de', '100', '=', '?'], answer: '50', options: ['25', '50', '75', '100'], hint: 'Metade de 100!' },
+          { instruction: 'Complete a soma decimal:', emoji: '🍰', parts: ['1,5', '+', '?', '=', '3,0'], answer: '1,5', options: ['0,5', '1,0', '1,5', '2,0'], hint: '1,5 + 1,5!' },
+          { instruction: 'Área do retângulo:', emoji: '📐', parts: ['8', '×', '?', '=', '40'], answer: '5', options: ['4', '5', '6', '8'], hint: '8 × 5!' },
+          { instruction: 'Complete para 1 inteiro:', emoji: '🍫', parts: ['3/4', '+', '?', '=', '4/4'], answer: '1/4', options: ['1/4', '2/4', '3/4', '1/2'], hint: 'Falta 1/4!' },
+          { instruction: 'Complete a porcentagem:', emoji: '🏷️', parts: ['10%', 'de', '300', '=', '?'], answer: '30', options: ['10', '20', '30', '50'], hint: '300 ÷ 10!' },
+          { instruction: 'Complete a divisão:', emoji: '🔢', parts: ['120', '÷', '?', '=', '12'], answer: '10', options: ['10', '12', '15', '20'], hint: '10!' },
+          { instruction: 'Complete a porcentagem:', emoji: '🍬', parts: ['25%', 'de', '40', '=', '?'], answer: '10', options: ['5', '10', '15', '20'], hint: '40 ÷ 4!' },
+          { instruction: 'Sequência decimal:', emoji: '🎈', parts: ['0,5,', '1,0,', '1,5,', '?'], answer: '2,0', options: ['1,8', '2,0', '2,5', '3,0'], hint: '2,0!' },
+          { instruction: 'Complete a multiplicação:', emoji: '🧁', parts: ['15', '×', '4', '=', '?'], answer: '60', options: ['45', '50', '60', '75'], hint: '60!' },
+          { instruction: 'Complete a soma:', emoji: '🎀', parts: ['1/2', '+', '1/2', '=', '?'], answer: '1', options: ['1/4', '1/2', '1', '2'], hint: '1 inteiro!' },
+        ],
+        matCompare: [
+          { left: '1/2', right: '50%', emoji: '🍰', sym: '=', hint: 'Iguais!' },
+          { left: '3/4', right: '1/4', emoji: '🍫', sym: '>', hint: '3/4 é maior!' },
+          { left: '25% de 100', right: '40', emoji: '⭐', sym: '<', hint: '25 < 40!' },
+          { left: '2,5 + 2,5', right: '5', emoji: '🧁', sym: '=', hint: '5 = 5!' },
+          { left: 'Área 6×4', right: '20 cm²', emoji: '📐', sym: '>', hint: '24 > 20!' },
+          { left: '10% de 80', right: '12', emoji: '🏷️', sym: '<', hint: '8 < 12!' },
+          { left: '50% de 90', right: '45', emoji: '🍬', sym: '=', hint: '45 = 45!' },
+          { left: '3,8', right: '3,2', emoji: '🎈', sym: '>', hint: '3,8 é maior!' },
+          { left: '1/4', right: '1/2', emoji: '🍓', sym: '<', hint: '25% < 50%!' },
+          { left: '100 ÷ 4', right: '25', emoji: '🎀', sym: '=', hint: '25 = 25!' },
+        ],
+      },
+    ];
+
+    // =========================================================================
+    // 2. ESTADO GLOBAL & PERSISTÊNCIA LOCAL (INCLUINDO PROGRESSO NO MINI-JOGO)
+    // =========================================================================
+    const STORAGE_KEY = 'magica_do_saber_progress_v2';
+    const LEGACY_KEY = 'mundo_doce_saber_progress_v1';
+
+    function loadProgress() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem(LEGACY_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          const stars = typeof parsed.stars === 'number' && parsed.stars >= 0 ? parsed.stars : 0;
+          const points = typeof parsed.points === 'number' && parsed.points >= 0 ? parsed.points : stars * 10;
+          const completed = Array.isArray(parsed.completedGames) ? parsed.completedGames : [];
+          const bestScores = parsed.bestScores && typeof parsed.bestScores === 'object' ? parsed.bestScores : {};
+          const lastGradeId = typeof parsed.lastGradeId === 'number' ? parsed.lastGradeId : null;
+          const activeGameId = lastGradeId && typeof parsed.activeGameId === 'string' ? parsed.activeGameId : null;
+          const gameSessions = parsed.gameSessions && typeof parsed.gameSessions === 'object' ? parsed.gameSessions : {};
+          const audioPrefs = parsed.audioPrefs && typeof parsed.audioPrefs === 'object'
+            ? {
+                musicEnabled: parsed.audioPrefs.musicEnabled !== false,
+                sfxEnabled: parsed.audioPrefs.sfxEnabled !== false,
+                voiceEnabled: parsed.audioPrefs.voiceEnabled !== false,
+              }
+            : { musicEnabled: true, sfxEnabled: true, voiceEnabled: true };
+          return { stars, points, completed, bestScores, lastGradeId, activeGameId, gameSessions, audioPrefs };
+        }
+      } catch (e) {}
+      return {
+        stars: 0, points: 0, completed: [], bestScores: {},
+        lastGradeId: null, activeGameId: null, gameSessions: {},
+        audioPrefs: { musicEnabled: true, sfxEnabled: true, voiceEnabled: true },
+      };
+    }
+
+    const initialSaved = loadProgress();
+    const state = {
+      gradeId: initialSaved.lastGradeId,
+      gameId: initialSaved.activeGameId,
+      musicEnabled: initialSaved.audioPrefs.musicEnabled,
+      sfxEnabled: initialSaved.audioPrefs.sfxEnabled,
+      voiceEnabled: initialSaved.audioPrefs.voiceEnabled,
+      stars: initialSaved.stars,
+      points: initialSaved.points,
+      completed: initialSaved.completed,
+      bestScores: initialSaved.bestScores,
+      gameSessions: initialSaved.gameSessions,
+      step: 0, score: 0, status: 'idle', selectedOption: null, assembled: [],
+      showHint: false, hadWrong: false, matchRound: 0, matchLeft: null,
+      matchedIds: [], mistakes: 0, finished: false,
+      mouseMood: 'idle',
+      mouseSpeech: 'Ihii! Oi, amiguinho! Clique nas respostas ou toque em mim para conversar!',
+      streak: 0,
+      heroMood: 'happy',
+      heroSpeech: 'Ihii! Oi, amiguinho! Toque em mim para ouvir minha voz!',
+    };
+
+    function restoreSessionIntoState(gameKey) {
+      const s = state.gameSessions[gameKey];
+      if (!s) {
+        Object.assign(state, {
+          step: 0, score: 0, status: 'idle', selectedOption: null, assembled: [],
+          showHint: false, hadWrong: false, matchRound: 0, matchLeft: null,
+          matchedIds: [], mistakes: 0, finished: false,
+        });
+        return;
+      }
+      Object.assign(state, {
+        step: s.step || 0,
+        score: s.score || 0,
+        status: s.status || 'idle',
+        selectedOption: s.selectedOption !== undefined ? s.selectedOption : null,
+        assembled: Array.isArray(s.assembledTiles) ? s.assembledTiles : [],
+        showHint: false,
+        hadWrong: Boolean(s.hadWrong),
+        matchRound: s.matchRound || 0,
+        matchLeft: null,
+        matchedIds: Array.isArray(s.matchedIds) ? s.matchedIds : [],
+        mistakes: s.mistakes || 0,
+        finished: false,
+      });
+    }
+
+    if (state.gradeId && state.gameId) {
+      restoreSessionIntoState(`${state.gradeId}-${state.gameId}`);
+    }
+
+    function saveCurrentGameSession() {
+      if (!state.gradeId || !state.gameId || state.finished) return;
+      const key = `${state.gradeId}-${state.gameId}`;
+      state.gameSessions[key] = {
+        step: state.step,
+        score: state.score,
+        hadWrong: state.hadWrong,
+        status: state.status,
+        selectedOption: state.selectedOption,
+        assembledTiles: state.assembled,
+        matchRound: state.matchRound,
+        matchedIds: state.matchedIds,
+        mistakes: state.mistakes,
+        updatedAt: Date.now(),
+      };
+    }
+
+    function saveProgress() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          stars: state.stars,
+          points: state.points,
+          completedGames: state.completed,
+          bestScores: state.bestScores,
+          lastGradeId: state.gradeId,
+          activeGameId: state.gameId,
+          gameSessions: state.gameSessions,
+          audioPrefs: { musicEnabled: state.musicEnabled, sfxEnabled: state.sfxEnabled, voiceEnabled: state.voiceEnabled },
+        }));
+      } catch (e) {}
+      document.getElementById('header-stars-count').textContent = `${state.stars} ★ · ${state.points} pts`;
+      updateAudioButtons();
+    }
+
+    // =========================================================================
+    // 3. ÁUDIO DIVERTIDO + VOZ DO RATINHO ESTILO CARTOON + REAÇÕES EMOCIONAIS
+    // =========================================================================
+    let audioCtx = null;
+    let musicTimer = null;
+    let musicStep = 0;
+
+    function getCtx() {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return null;
+      if (!audioCtx) audioCtx = new Ctx();
+      if (audioCtx.state === 'suspended') audioCtx.resume().catch(() => {});
+      return audioCtx;
+    }
+
+    function playTone(freq, delay, dur, type = 'sine', peak = 0.08) {
+      if (!state.sfxEnabled) return;
+      const ctx = getCtx();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, now + delay);
+      gain.gain.setValueAtTime(0.001, now + delay);
+      gain.gain.exponentialRampToValueAtTime(peak, now + delay + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + delay + dur);
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.start(now + delay); osc.stop(now + delay + dur + 0.02);
+    }
+
+    function playFx(kind) {
+      if (!state.sfxEnabled) return;
+      if (kind === 'click') playTone(720, 0, 0.065, 'triangle', 0.055);
+      if (kind === 'correct') { playTone(587.3, 0, 0.11); playTone(739.9, 0.08, 0.11); playTone(880, 0.16, 0.13); playTone(1174.6, 0.24, 0.24); }
+      if (kind === 'wrong') {
+        const ctx = getCtx();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.type = 'triangle';
+        o.frequency.setValueAtTime(420, now);
+        o.frequency.exponentialRampToValueAtTime(240, now + 0.22);
+        g.gain.setValueAtTime(0.001, now);
+        g.gain.linearRampToValueAtTime(0.07, now + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.001, now + 0.26);
+        o.connect(g); g.connect(ctx.destination);
+        o.start(now); o.stop(now + 0.28);
+      }
+      if (kind === 'win') { playTone(523.2, 0, 0.12); playTone(659.2, 0.1, 0.12); playTone(783.9, 0.2, 0.12); playTone(1046.5, 0.3, 0.36); }
+    }
+
+    // Música alegre de 64 passos (4 seções A-B-C-D com pausas naturais) — estilo marimba & pizzicato
+    const FUN_MELODY = [
+      523.25, 0, 659.25, 783.99, 880.0, 0, 783.99, 659.25,
+      587.33, 659.25, 698.46, 0, 659.25, 0, 523.25, 0,
+      783.99, 0, 880.0, 1046.5, 880.0, 0, 783.99, 659.25,
+      698.46, 0, 783.99, 659.25, 587.33, 0, 0, 0,
+      659.25, 698.46, 783.99, 0, 880.0, 783.99, 698.46, 659.25,
+      587.33, 0, 659.25, 783.99, 659.25, 0, 523.25, 0,
+      1046.5, 0, 987.77, 880.0, 783.99, 0, 659.25, 783.99,
+      880.0, 0, 783.99, 659.25, 523.25, 0, 0, 0,
+    ];
+    const FUN_BASS = [
+      261.63, 0, 0, 0, 196.0, 0, 0, 0,
+      293.66, 0, 0, 0, 196.0, 0, 0, 0,
+      261.63, 0, 0, 0, 220.0, 0, 0, 0,
+      174.61, 0, 0, 0, 196.0, 0, 261.63, 0,
+      220.0, 0, 0, 0, 174.61, 0, 0, 0,
+      196.0, 0, 0, 0, 261.63, 0, 0, 0,
+      174.61, 0, 0, 0, 261.63, 0, 0, 0,
+      196.0, 0, 196.0, 0, 261.63, 0, 0, 0,
+    ];
+    const FUN_PERC = [
+      0, 0, 1, 0, 0, 0, 1, 0,
+      0, 0, 1, 0, 0, 0, 1, 1,
+      0, 0, 1, 0, 0, 0, 1, 0,
+      0, 0, 1, 0, 0, 0, 0, 0,
+      0, 0, 1, 0, 0, 0, 1, 0,
+      0, 0, 1, 0, 0, 0, 1, 1,
+      0, 0, 1, 0, 0, 0, 1, 0,
+      0, 0, 1, 0, 1, 0, 0, 0,
+    ];
+
+    function scheduleMusicNote() {
+      if (!state.musicEnabled || !audioCtx || audioCtx.state !== 'running') return;
+      const now = audioCtx.currentTime;
+      const i = musicStep % FUN_MELODY.length;
+      musicStep += 1;
+      if (FUN_MELODY[i] > 0) {
+        const osc = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(FUN_MELODY[i], now);
+        g.gain.setValueAtTime(0.0005, now);
+        g.gain.linearRampToValueAtTime(0.026, now + 0.012);
+        g.gain.exponentialRampToValueAtTime(0.0005, now + 0.24);
+        osc.connect(g); g.connect(audioCtx.destination);
+        osc.start(now); osc.stop(now + 0.26);
+      }
+      if (FUN_BASS[i] > 0) {
+        const bo = audioCtx.createOscillator();
+        const bg = audioCtx.createGain();
+        bo.type = 'sine';
+        bo.frequency.setValueAtTime(FUN_BASS[i], now);
+        bg.gain.setValueAtTime(0.0005, now);
+        bg.gain.linearRampToValueAtTime(0.024, now + 0.015);
+        bg.gain.exponentialRampToValueAtTime(0.0005, now + 0.34);
+        bo.connect(bg); bg.connect(audioCtx.destination);
+        bo.start(now); bo.stop(now + 0.36);
+      }
+      if (FUN_PERC[i] === 1) {
+        const po = audioCtx.createOscillator();
+        const pg = audioCtx.createGain();
+        po.type = 'sine';
+        po.frequency.setValueAtTime(1750, now);
+        po.frequency.exponentialRampToValueAtTime(920, now + 0.04);
+        pg.gain.setValueAtTime(0.0005, now);
+        pg.gain.linearRampToValueAtTime(0.01, now + 0.004);
+        pg.gain.exponentialRampToValueAtTime(0.0005, now + 0.045);
+        po.connect(pg); pg.connect(audioCtx.destination);
+        po.start(now); po.stop(now + 0.05);
+      }
+    }
+
+    function syncMusic() {
+      if (!state.musicEnabled) {
+        if (musicTimer) { clearInterval(musicTimer); musicTimer = null; }
+        return;
+      }
+      const ctx = getCtx();
+      if (ctx && ctx.state === 'running' && !musicTimer) {
+        musicTimer = setInterval(scheduleMusicNote, 225);
+      }
+    }
+
+    window.addEventListener('pointerdown', () => { if (state.musicEnabled) { getCtx(); syncMusic(); } }, { once: true, passive: true });
+
+    const MASCOT_IMG = '/assets/aistudio/Gatinho_kawaii_a_ler_com_ternura_670f95ac.png';
+
+    const MOUSE_PHRASES = {
+      greet: [
+        'Ihii! Oi, amiguinho! Vamos brincar e aprender juntos?',
+        'Obaaa! Eu sou a Gatinha Mágica! Toque nas respostas para ganhar estrelas!',
+        'Ebaaa! Que legal ter você aqui comigo! Bora jogar?',
+        'Haha! Estou super animado para ver você brilhar!',
+      ],
+      celebrate: [
+        'Ihii! Obaaa! Você acertou tudinho, amiguinho!',
+        'Uauuu! Que demais! Mais uma estrelinha mágica para você!',
+        'Ebaaa! Isso mesmo! Você é super inteligente, haha!',
+        'Vivaaa! Que resposta incrível! Manda ver!',
+      ],
+      oops: [
+        'Opsie! Quase, quase, amiguinho! Tenta mais uma vez!',
+        'Ai ai ai, foi por pouquinho! Não desiste não, eu torço por você!',
+        'Ih, escorregou! Respira fundo e escolhe outra opção!',
+        'Calminha, amiguinho! Olha a dica fofinha se precisar!',
+      ],
+      thinking: [
+        'Hmm, deixa eu pensar com você! Olha só essa dica mágica!',
+        'Opa! Tive uma ideia bem legal para te ajudar!',
+      ],
+      party: [
+        'Ebaaa! Ihii! Parabéns, super campeão! Você completou tudo!',
+        'Uhuuu! Festa da gatinha! Você brilhou muito nessa fase!',
+      ],
+    };
+
+    function pickMousePhrase(emotion, streak = 0) {
+      if (emotion === 'celebrate' && streak >= 3) {
+        return `Uauuu! ${streak} acertos seguidos! Ihii, você é imbatível!`;
+      }
+      const list = MOUSE_PHRASES[emotion] || MOUSE_PHRASES.greet;
+      return list[Math.floor(Math.random() * list.length)];
+    }
+
+    function playMouseChirp(emotion) {
+      const ctx = getCtx();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      const chirp = (f1, f2, d, dur, vol = 0.055) => {
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.type = 'sine';
+        o.frequency.setValueAtTime(f1, now + d);
+        o.frequency.exponentialRampToValueAtTime(f2, now + d + dur);
+        g.gain.setValueAtTime(0.001, now + d);
+        g.gain.linearRampToValueAtTime(vol, now + d + 0.014);
+        g.gain.exponentialRampToValueAtTime(0.001, now + d + dur);
+        o.connect(g); g.connect(ctx.destination);
+        o.start(now + d); o.stop(now + d + dur + 0.02);
+      };
+      if (emotion === 'celebrate' || emotion === 'party') {
+        chirp(780, 1080, 0, 0.075); chirp(920, 1280, 0.085, 0.085); chirp(1080, 1520, 0.18, 0.11);
+      } else if (emotion === 'oops') {
+        chirp(760, 520, 0, 0.11, 0.05); chirp(580, 440, 0.12, 0.12, 0.045);
+      } else if (emotion === 'thinking') {
+        chirp(580, 900, 0, 0.12, 0.045);
+      } else {
+        chirp(740, 1040, 0, 0.075); chirp(880, 1260, 0.085, 0.095);
+      }
+    }
+
+    function stopMouseVoice() {
+      if (window.speechSynthesis) {
+        try { window.speechSynthesis.cancel(); } catch (e) {}
+      }
+    }
+
+    function speakMouseVoice(text, emotion = 'greet', force = false) {
+      if (!state.voiceEnabled && !force) return;
+      playMouseChirp(emotion);
+      if (!window.speechSynthesis) return;
+      try {
+        window.speechSynthesis.cancel();
+        const clean = text.replace(/[\u{1F300}-\u{1FAFF}✨🎀🌸⭐🔥💬]/gu, '').trim();
+        if (!clean) return;
+        const utter = new SpeechSynthesisUtterance(clean);
+        const voices = window.speechSynthesis.getVoices();
+        const ptVoices = voices.filter((v) => v.lang.toLowerCase().startsWith('pt'));
+        const preferred = ptVoices.find((v) => /google|luciana|maria|francisca|fernanda|heloisa|child|female/i.test(v.name)) || ptVoices.find((v) => v.lang.toLowerCase() === 'pt-br') || ptVoices[0];
+        if (preferred) utter.voice = preferred;
+        utter.lang = 'pt-BR';
+        utter.pitch = emotion === 'celebrate' || emotion === 'party' ? 2.0 : emotion === 'oops' ? 1.82 : 1.95;
+        utter.rate = emotion === 'celebrate' || emotion === 'party' ? 1.18 : emotion === 'oops' ? 1.05 : 1.14;
+        utter.volume = 0.94;
+        window.speechSynthesis.speak(utter);
+      } catch (e) {}
+    }
+
+    function reactMouse(emotion, customText) {
+      if (emotion === 'celebrate') state.streak += 1;
+      else if (emotion === 'oops') state.streak = 0;
+      const moodMap = { greet: 'happy', celebrate: 'celebrate', oops: 'oops', thinking: 'thinking', party: 'party' };
+      const phrase = customText || pickMousePhrase(emotion, state.streak);
+      state.mouseMood = moodMap[emotion] || 'happy';
+      state.mouseSpeech = phrase;
+      speakMouseVoice(phrase, emotion);
+    }
+
+    function renderMouseSvg(mood = 'idle', sizeCls = 'w-20 h-20') {
+      const isCelebrate = mood === 'celebrate' || mood === 'party';
+      const isOops = mood === 'oops';
+      const isThinking = mood === 'thinking';
+      const anim = isCelebrate ? 'animate-cartoon-bounce' : isOops ? 'animate-wobble' : '';
+      const ring = isCelebrate
+        ? 'border-[#34B37D] ring-4 ring-[#FFF4BD] bg-[#D4F8E8]'
+        : isOops
+        ? 'border-[#F4729B] ring-4 ring-[#FFD6E0] bg-[#FFE5EC]'
+        : isThinking
+        ? 'border-[#9E77ED] ring-4 ring-[#E5D4FF] bg-[#F4EEFF]'
+        : 'border-[#86CBFA] ring-4 ring-[#C2E7FF]/60 bg-[#FFFDF9]';
+      const badge = mood === 'party' ? '🥳' : mood === 'celebrate' ? '🤩' : isOops ? '😅' : isThinking ? '💡' : mood === 'happy' ? '😊' : '✨';
+      return `<div class="relative inline-flex items-center justify-center shrink-0 ${sizeCls} ${anim}">
+        ${mood === 'party' ? '<span aria-hidden="true" class="absolute -top-3 left-1/2 -translate-x-1/2 z-10 text-xl sm:text-2xl select-none">👑</span>' : ''}
+        <div class="w-full h-full rounded-full overflow-hidden border-3 shadow-sm ${ring}">
+          <img src="${MASCOT_IMG}" alt="Mascote Gatinha Mágica" class="w-full h-full object-cover object-center ${isCelebrate ? 'scale-110' : isOops ? 'scale-95' : 'scale-105'}" />
+        </div>
+        <span aria-hidden="true" class="absolute -bottom-1 -right-1 z-10 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white border-2 border-[#3D2C3E]/15 shadow-xs flex items-center justify-center text-sm sm:text-base select-none">${badge}</span>
+        ${isCelebrate ? '<span aria-hidden="true" class="absolute -top-1 -left-1 z-10 text-sm sm:text-base select-none">⭐</span>' : ''}
+        ${isOops ? '<span aria-hidden="true" class="absolute top-0 -right-1 z-10 text-sm select-none">💧</span>' : ''}
+      </div>`;
+    }
+
+    function updateAudioButtons() {
+      const mBtn = document.getElementById('music-toggle-btn');
+      const sBtn = document.getElementById('sfx-toggle-btn');
+      const vBtn = document.getElementById('voice-toggle-btn');
+      if (mBtn) {
+        mBtn.textContent = state.musicEnabled ? '🎵 Música On' : '🔇 Música Off';
+        mBtn.className = `kawaii-btn px-2.5 sm:px-3 py-1.5 rounded-full border-2 text-xs font-extrabold whitespace-nowrap cursor-pointer ${state.musicEnabled ? 'bg-[#E5D4FF] border-[#C1A1FA] text-[#532B94]' : 'bg-white border-[#DFD2D9] text-[#7D687E]'}`;
+      }
+      if (sBtn) {
+        sBtn.textContent = state.sfxEnabled ? '🔊 Efeitos On' : '🔕 Efeitos Off';
+        sBtn.className = `kawaii-btn px-2.5 sm:px-3 py-1.5 rounded-full border-2 text-xs font-extrabold whitespace-nowrap cursor-pointer ${state.sfxEnabled ? 'bg-[#C2E7FF] border-[#86CBFA] text-[#16588E]' : 'bg-white border-[#DFD2D9] text-[#7D687E]'}`;
+      }
+      if (vBtn) {
+        vBtn.textContent = state.voiceEnabled ? '🗣️ Voz On' : '🔇 Voz Off';
+        vBtn.className = `kawaii-btn px-2.5 sm:px-3 py-1.5 rounded-full border-2 text-xs font-extrabold whitespace-nowrap cursor-pointer ${state.voiceEnabled ? 'bg-[#FFF4BD] border-[#F0D15A] text-[#6E5104]' : 'bg-white border-[#DFD2D9] text-[#7D687E]'}`;
+      }
+    }
+
+    function toggleMusic() {
+      state.musicEnabled = !state.musicEnabled;
+      playFx('click');
+      syncMusic();
+      saveProgress();
+    }
+
+    function toggleSfx() {
+      state.sfxEnabled = !state.sfxEnabled;
+      if (state.sfxEnabled) playFx('click');
+      saveProgress();
+    }
+
+    function toggleVoice() {
+      state.voiceEnabled = !state.voiceEnabled;
+      playFx('click');
+      if (!state.voiceEnabled) stopMouseVoice();
+      else speakMouseVoice('Ihii! Oi, amiguinho! Minha voz fofinha está ligada!', 'greet', true);
+      saveProgress();
+    }
+
+    function tapHeroMouse() {
+      playFx('click');
+      const phrase = pickMousePhrase('greet');
+      state.heroMood = state.heroMood === 'happy' ? 'celebrate' : 'happy';
+      state.heroSpeech = phrase;
+      speakMouseVoice(phrase, 'greet');
+      render();
+    }
+
+    function tapBuddyMouse() {
+      playFx('click');
+      reactMouse('greet');
+      render();
+    }
+
+    function launchConfetti() {
+      const layer = document.getElementById('confetti-layer');
+      const emojis = ['🎀', '⭐', '🌸', '✨', '🍬', '⭐'];
+      layer.innerHTML = `<div class="relative w-full max-w-2xl h-full">${emojis
+        .map((e, i) => `<span style="left:${14 + i * 14}%;animation-delay:${i * 50}ms" class="absolute top-0 text-2xl animate-confetti">${e}</span>`)
+        .join('')}</div>`;
+      layer.classList.remove('hidden');
+      setTimeout(() => layer.classList.add('hidden'), 1150);
+    }
+
+    function goHome() { playFx('click'); stopMouseVoice(); state.gradeId = null; state.gameId = null; render(); }
+    function selectGrade(id) { playFx('click'); stopMouseVoice(); state.gradeId = id; state.gameId = null; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+    function openCurrentGradeOrFirst() { selectGrade(state.gradeId || 1); }
+
+    function startGame(gameId, restartFresh = false) {
+      playFx('click');
+      stopMouseVoice();
+      state.gameId = gameId;
+      state.streak = 0;
+      state.mouseMood = 'idle';
+      state.mouseSpeech = 'Ihii! Oi, amiguinho! Clique nas respostas ou toque em mim para conversar!';
+      const key = `${state.gradeId}-${gameId}`;
+      if (restartFresh) {
+        delete state.gameSessions[key];
+      }
+      restoreSessionIntoState(key);
+      render();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function toggleAlbum(show) {
+      playFx('click');
+      const modal = document.getElementById('album-modal');
+      if (show) { renderAlbum(); modal.classList.remove('hidden'); modal.classList.add('flex'); }
+      else { modal.classList.add('hidden'); modal.classList.remove('flex'); }
+    }
+
+    function resetSavedProgress() {
+      state.stars = 0; state.points = 0; state.completed = []; state.bestScores = {};
+      state.gameSessions = {}; state.gradeId = null; state.gameId = null;
+      saveProgress(); renderAlbum(); render();
+    }
+
+    function earnStars(amount, markGameKey, roundScore) {
+      state.stars += amount;
+      state.points += markGameKey ? 50 : amount * 10;
+      if (markGameKey) {
+        if (!state.completed.includes(markGameKey)) state.completed.push(markGameKey);
+        if (typeof roundScore === 'number') {
+          state.bestScores[markGameKey] = Math.max(state.bestScores[markGameKey] || 0, roundScore);
+        }
+        delete state.gameSessions[markGameKey];
+      }
+      saveProgress();
+    }
+
+    function renderAlbum() {
+      document.getElementById('album-content').innerHTML = `
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div class="rounded-2xl bg-[#FFF4BD] border-2 border-[#F2D15B] p-4">
+            <p class="text-xs font-extrabold text-[#7D5C06]">Estrelinhas</p>
+            <p class="font-display text-2xl font-bold">${state.stars} ⭐</p>
+          </div>
+          <div class="rounded-2xl bg-[#FFD6E0] border-2 border-[#F59DB6] p-4">
+            <p class="text-xs font-extrabold text-[#9C2D54]">Pontos Totais</p>
+            <p class="font-display text-2xl font-bold">${state.points} ✨</p>
+          </div>
+          <div class="rounded-2xl bg-[#D4F8E8] border-2 border-[#7ED9B2] p-4">
+            <p class="text-xs font-extrabold text-[#146B48]">Fases Concluídas</p>
+            <p class="font-display text-2xl font-bold">${state.completed.length} / 40 🎀</p>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          ${REWARDS.map((r) => {
+            const ok = state.stars >= r.req;
+            return `<div class="rounded-3xl border-2 p-4 flex items-center gap-3 ${ok ? 'bg-white border-[#F2C6D4]' : 'bg-[#F8F3F5] border-[#E8DCE0] opacity-70'}">
+              <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl" style="background:${ok ? r.bg : '#EDE6E9'}">${ok ? r.icon : '🔒'}</div>
+              <div><h3 class="font-display font-bold text-base">${r.name}</h3><p class="text-xs text-[#6E5670] font-semibold">${r.desc}</p><p class="text-xs font-extrabold text-[#C93B6B]">${ok ? 'Conquistado! ✨' : `Faltam ${r.req - state.stars} estrelas`}</p></div>
+            </div>`;
+          }).join('')}
+        </div>`;
+    }
+
+    function renderHome() {
+      const unlockedCount = REWARDS.filter((r) => state.stars >= r.req).length;
+      return `
+        <div class="space-y-10 animate-pop-in">
+          <section class="rounded-3xl bg-gradient-to-br from-[#FF9EC6] via-[#FFE27A] via-[#90ECC3] to-[#8AD3FF] border-4 border-white p-6 sm:p-10 shadow-lg">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+              <div class="lg:col-span-8 space-y-4">
+                <span class="inline-block px-4 py-1.5 rounded-full bg-white/90 border-2 border-[#F7B4C6] text-xs sm:text-sm font-extrabold text-[#C93B6B]">🌈 Ensino Fundamental 1 · 1º ao 5º Ano</span>
+                <h1 class="font-display text-3xl sm:text-5xl font-bold text-[#3D2C3E] leading-tight">Bem-vindo à <span class="text-[#C93B6B]">Mágica do Saber</span>! ✨</h1>
+                <p class="text-base sm:text-lg font-bold text-[#4D3B4F] max-w-2xl">Escolha a sua série para brincar em jogos super coloridos de Português e Matemática e guardar todo o seu progresso automaticamente!</p>
+                <div class="flex flex-wrap gap-3 pt-2">
+                  <button onclick="document.getElementById('grade-grid').scrollIntoView({behavior:'smooth'})" class="kawaii-btn px-6 py-3 rounded-full bg-[#D94E7A] text-white font-extrabold cursor-pointer">🎮 Escolher Minha Série</button>
+                  <button onclick="toggleAlbum(true)" class="kawaii-btn px-5 py-3 rounded-full bg-[#FFF4BD] border-2 border-[#F0D15A] text-[#6E5104] font-extrabold cursor-pointer">🏆 Meus Lacinhos (${unlockedCount}/${REWARDS.length})</button>
+                </div>
+              </div>
+              <div class="lg:col-span-4 flex flex-col items-center">
+                <button onclick="tapHeroMouse()" title="Toque para ouvir o amiguinho!" class="group animate-float-slow flex flex-col items-center cursor-pointer">
+                  <div class="bg-white/85 group-hover:bg-white p-3.5 rounded-full border-4 border-white shadow-sm transition-transform group-hover:scale-105">
+                    ${renderMouseSvg(state.heroMood, 'w-32 h-32 sm:w-36 sm:h-36')}
+                  </div>
+                  <span class="mt-2.5 max-w-[260px] text-center text-xs font-extrabold text-[#8F2449] bg-[#FFD6E0] group-hover:bg-[#FFC2D1] px-4 py-1.5 rounded-2xl border-2 border-[#F49EB6]">💬 “${state.heroSpeech}”</span>
+                </button>
+              </div>
+            </div>
+          </section>
+          <section id="grade-grid" class="space-y-5">
+            <div>
+              <h2 class="font-display text-2xl sm:text-3xl font-bold">🌟 Escolha a sua série</h2>
+              <p class="text-sm font-bold text-[#6E5670]">Conteúdo exclusivo do 1º ao 5º ano do Ensino Fundamental 1.</p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
+              ${GRADES.map((g) => {
+                const done = state.completed.filter((k) => k.startsWith(`${g.id}-`)).length;
+                const pct = (done / 8) * 100;
+                return `<button onclick="selectGrade(${g.id})" style="background:${g.cardBg};border-color:${g.cardBorder}" class="kawaii-card text-left rounded-3xl border-3 p-5 flex flex-col justify-between gap-4 cursor-pointer">
+                  <div class="space-y-3">
+                    <div class="flex items-center justify-between"><span style="background:${g.accentBg};color:${g.accentText}" class="font-display text-xl font-bold px-3.5 py-1 rounded-full border-2 border-white">${g.title}</span><span class="text-xl">🎀</span></div>
+                    <h3 class="font-display text-lg font-bold leading-snug">${g.subtitle}</h3>
+                    <p class="text-xs font-extrabold text-[#5C475E]">🎨 8 mini-jogos divertidos</p>
+                  </div>
+                  <div class="space-y-2 pt-2 border-t-2 border-white/60">
+                    <div class="h-2.5 w-full rounded-full bg-white/80 overflow-hidden"><div class="h-full rounded-full" style="width:${Math.max(done > 0 ? 12 : 0, pct)}%;background:${g.accentText}"></div></div>
+                    <div class="flex items-center justify-between"><span class="text-xs font-extrabold">${done}/8 fases</span><span class="px-3 py-1 rounded-full bg-white text-xs font-extrabold">Entrar →</span></div>
+                  </div>
+                </button>`;
+              }).join('')}
+            </div>
+          </section>
+        </div>`;
+    }
+
+    function getSessionLabel(key, gameId) {
+      const s = state.gameSessions[key];
+      if (!s) return null;
+      if (gameId === 'pt-match' || gameId === 'mat-match') {
+        const c = (s.matchRound || 0) * 5 + (s.matchedIds ? s.matchedIds.length : 0);
+        if (c <= 0 && !s.mistakes) return null;
+        return `Em andamento: ${c}/10 pares ✨`;
+      }
+      const step = s.step || 0;
+      const ans = step + (s.status === 'correct' ? 1 : 0);
+      if (step === 0 && s.status === 'idle' && (!s.assembledTiles || s.assembledTiles.length === 0)) return null;
+      return `Em andamento: ${Math.min(10, Math.max(1, ans || 1))}/10 ✨`;
+    }
+
+    function renderGameBtn(gradeId, id, icon, title, desc, cardCls, btnCls) {
+      const key = `${gradeId}-${id}`;
+      const done = state.completed.includes(key);
+      const best = state.bestScores[key];
+      const inProgress = getSessionLabel(key, id);
+      const statusTxt = inProgress
+        ? ` · <span class="text-[#7C4DFF] font-extrabold">${inProgress}</span>`
+        : done
+        ? ` · <span class="text-[#146B48] font-extrabold">Concluído ✓${best !== undefined ? ` (Recorde ${best}/10)` : ''}</span>`
+        : '';
+      return `<button onclick="startGame('${id}')" class="kawaii-btn w-full p-4 rounded-3xl border-2 flex items-center justify-between text-left cursor-pointer ${cardCls}">
+        <div><p class="font-display text-lg font-bold">${icon} ${title}</p><p class="text-xs font-bold text-[#6E5670]">${desc}${statusTxt}</p></div>
+        <span class="px-4 py-2 rounded-full text-white text-xs font-extrabold ${btnCls}">${inProgress ? 'Continuar' : done ? 'Rejogar' : 'Jogar'}</span>
+      </button>`;
+    }
+
+    function renderSubjectHub(grade) {
+      return `
+        <div class="space-y-8 animate-pop-in">
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <button onclick="goHome()" class="kawaii-btn px-5 py-2.5 rounded-full bg-white border-2 border-[#F4C4D4] font-extrabold text-sm cursor-pointer">← Voltar às Séries</button>
+            <div class="flex flex-wrap gap-1.5 bg-white p-1.5 rounded-full border-2 border-[#F2D6E0]">
+              ${GRADES.map((g) => `<button onclick="selectGrade(${g.id})" class="px-3.5 py-1.5 rounded-full text-xs font-extrabold cursor-pointer ${g.id === grade.id ? 'bg-[#D94E7A] text-white' : 'text-[#5C475E] hover:bg-[#FFF0F4]'}">${g.title}</button>`).join('')}
+            </div>
+          </div>
+          <div style="background:${grade.cardBg};border-color:${grade.cardBorder}" class="rounded-3xl border-3 p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div class="space-y-1">
+              <p style="color:${grade.accentText}" class="text-sm font-extrabold inline-block bg-white/85 px-3 py-1 rounded-full">✨ Ensino Fundamental 1 · Guia: ${grade.mascot}</p>
+              <h1 class="font-display text-3xl sm:text-4xl font-bold">${grade.title} — ${grade.subtitle}</h1>
+              <p class="text-sm sm:text-base font-bold text-[#4D3B4F]">Escolha uma matéria! Seu progresso dentro de cada mini-jogo é salvo automaticamente.</p>
+            </div>
+            <div class="rounded-full bg-white/80 p-2 border-2 border-white shrink-0">
+              <div class="w-20 h-20 rounded-full overflow-hidden border-2 border-[#F49EB6] bg-white"><img src="${MASCOT_IMG}" alt="Gatinha Mágica" class="w-full h-full object-cover object-center scale-105" /></div>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <section class="bg-gradient-to-b from-[#FFC4DC] to-[#FFE6F0] rounded-3xl border-3 border-[#E84D8A] p-6 sm:p-7 space-y-4">
+              <div><h2 class="font-display text-2xl sm:text-3xl font-bold">📖 Português 🎀</h2><p class="text-xs sm:text-sm font-bold text-[#5C3A5E]">${grade.ptTopics}</p></div>
+              <div class="space-y-3">
+                ${renderGameBtn(grade.id, 'pt-quiz', '🎀', '1. Quiz de Português', 'Múltipla escolha · 10 perguntas', 'bg-[#FFB5D0] hover:bg-[#FF9EC2] border-[#E84D8A]', 'bg-[#D93873]')}
+                ${renderGameBtn(grade.id, 'pt-builder', '🧁', '2. Complete a Palavra', 'Letras, sílabas ou frases · 10 desafios', 'bg-[#D7BFFF] hover:bg-[#C6A4FF] border-[#8548E8]', 'bg-[#6F38DC]')}
+                ${renderGameBtn(grade.id, 'pt-truefalse', '🌸', '3. Certo ou Errado', 'Descubra se está certo · 10 desafios', 'bg-[#A6F2D0] hover:bg-[#8AEBC0] border-[#19A86A]', 'bg-[#158754]')}
+                ${renderGameBtn(grade.id, 'pt-match', '✨', '4. Ligue as Palavras', 'Encontre os pares certos · 10 desafios', 'bg-[#FFE785] hover:bg-[#FFDD59] border-[#E59F00]', 'bg-[#C47E00]')}
+              </div>
+            </section>
+            <section class="bg-gradient-to-b from-[#A8DEFF] to-[#DCF1FF] rounded-3xl border-3 border-[#1F90E0] p-6 sm:p-7 space-y-4">
+              <div><h2 class="font-display text-2xl sm:text-3xl font-bold">🧮 Matemática ⭐</h2><p class="text-xs sm:text-sm font-bold text-[#2C4B6E]">${grade.matTopics}</p></div>
+              <div class="space-y-3">
+                ${renderGameBtn(grade.id, 'mat-quiz', '⭐', '1. Quiz de Matemática', 'Múltipla escolha visual · 10 perguntas', 'bg-[#FFE785] hover:bg-[#FFDD59] border-[#E59F00]', 'bg-[#C47E00]')}
+                ${renderGameBtn(grade.id, 'mat-match', '🍬', '2. Ligue as Contas', 'Ligue a conta ao resultado · 10 desafios', 'bg-[#A6DCFF] hover:bg-[#8AD4FF] border-[#1F90E0]', 'bg-[#1273C4]')}
+                ${renderGameBtn(grade.id, 'mat-missing', '🍓', '3. Complete a Conta', 'Ache o número que falta · 10 desafios', 'bg-[#FFB5D0] hover:bg-[#FF9EC2] border-[#E84D8A]', 'bg-[#D93873]')}
+                ${renderGameBtn(grade.id, 'mat-compare', '⚖️', '4. Maior ou Menor', 'Compare os dois lados · 10 desafios', 'bg-[#D7BFFF] hover:bg-[#C6A4FF] border-[#8548E8]', 'bg-[#6F38DC]')}
+              </div>
+            </section>
+          </div>
+        </div>`;
+    }
+
+    // Handlers dos Jogos (com salvamento automático e reações emocionais do ratinho)
+    function pickQuizOption(idx) {
+      if (state.status === 'correct') return;
+      const grade = GRADES.find((g) => g.id === state.gradeId);
+      const list = state.gameId === 'pt-quiz' ? grade.ptQuiz : grade.matQuiz;
+      state.selectedOption = idx;
+      if (idx === list[state.step].correct) {
+        state.status = 'correct'; playFx('correct'); launchConfetti();
+        if (!state.hadWrong) state.score += 1;
+        reactMouse('celebrate');
+        saveCurrentGameSession();
+        earnStars(1);
+      } else {
+        state.status = 'wrong'; state.hadWrong = true; playFx('wrong');
+        reactMouse('oops');
+        saveCurrentGameSession();
+      }
+      render();
+    }
+
+    function nextStep(totalLen) {
+      playFx('click');
+      if (state.step + 1 < totalLen) {
+        Object.assign(state, { step: state.step + 1, selectedOption: null, assembled: [], status: 'idle', showHint: false, hadWrong: false });
+        saveCurrentGameSession();
+      } else {
+        state.finished = true; playFx('win'); launchConfetti();
+        reactMouse('party');
+        earnStars(2, `${state.gradeId}-${state.gameId}`, state.score);
+      }
+      render();
+    }
+
+    function pickBuilderTile(tileIdx) {
+      if (state.status === 'correct') return;
+      const grade = GRADES.find((g) => g.id === state.gradeId);
+      const c = grade.ptBuilder[state.step];
+      if (c.mode === 'missing') {
+        const val = c.tiles[tileIdx]; state.selectedOption = val;
+        if (val === c.answer) {
+          state.status = 'correct'; playFx('correct'); launchConfetti();
+          if (!state.hadWrong) state.score += 1;
+          reactMouse('celebrate');
+          saveCurrentGameSession(); earnStars(1);
+        } else {
+          state.status = 'wrong'; state.hadWrong = true; playFx('wrong');
+          reactMouse('oops');
+          saveCurrentGameSession();
+        }
+      } else {
+        if (state.assembled.includes(tileIdx)) return;
+        state.assembled.push(tileIdx); playFx('click');
+        if (state.assembled.length === c.target.length) {
+          if (state.assembled.map((i) => c.tiles[i]).join('') === c.answer) {
+            state.status = 'correct'; playFx('correct'); launchConfetti();
+            if (!state.hadWrong) state.score += 1;
+            reactMouse('celebrate');
+            saveCurrentGameSession(); earnStars(1);
+          } else {
+            state.status = 'wrong'; state.hadWrong = true; playFx('wrong');
+            reactMouse('oops');
+            saveCurrentGameSession();
+          }
+        } else {
+          saveCurrentGameSession();
+        }
+      }
+      render();
+    }
+
+    function pickTrueFalse(choice) {
+      if (state.status === 'correct') return;
+      const grade = GRADES.find((g) => g.id === state.gradeId);
+      const c = grade.ptTrueFalse[state.step];
+      state.selectedOption = choice;
+      if (choice === c.isTrue) {
+        state.status = 'correct'; playFx('correct'); launchConfetti();
+        if (!state.hadWrong) state.score += 1;
+        reactMouse('celebrate');
+        saveCurrentGameSession(); earnStars(1);
+      } else {
+        state.status = 'wrong'; state.hadWrong = true; playFx('wrong');
+        reactMouse('oops');
+        saveCurrentGameSession();
+      }
+      render();
+    }
+
+    function pickMissingOption(opt) {
+      if (state.status === 'correct') return;
+      const grade = GRADES.find((g) => g.id === state.gradeId);
+      const c = grade.matMissing[state.step];
+      state.selectedOption = opt;
+      if (opt === c.answer) {
+        state.status = 'correct'; playFx('correct'); launchConfetti();
+        if (!state.hadWrong) state.score += 1;
+        reactMouse('celebrate');
+        saveCurrentGameSession(); earnStars(1);
+      } else {
+        state.status = 'wrong'; state.hadWrong = true; playFx('wrong');
+        reactMouse('oops');
+        saveCurrentGameSession();
+      }
+      render();
+    }
+
+    function pickCompare(sym) {
+      if (state.status === 'correct') return;
+      const grade = GRADES.find((g) => g.id === state.gradeId);
+      const c = grade.matCompare[state.step];
+      state.selectedOption = sym;
+      if (sym === c.sym) {
+        state.status = 'correct'; playFx('correct'); launchConfetti();
+        if (!state.hadWrong) state.score += 1;
+        reactMouse('celebrate');
+        saveCurrentGameSession(); earnStars(1);
+      } else {
+        state.status = 'wrong'; state.hadWrong = true; playFx('wrong');
+        reactMouse('oops');
+        saveCurrentGameSession();
+      }
+      render();
+    }
+
+    function pickMatchLeft(id) { if (!state.matchedIds.includes(id)) { playFx('click'); state.matchLeft = id; state.status = 'idle'; render(); } }
+    function pickMatchRight(id) {
+      if (!state.matchLeft || state.matchedIds.includes(id)) return;
+      if (state.matchLeft === id) {
+        state.matchedIds.push(id); state.matchLeft = null; state.status = 'correct'; playFx('correct'); launchConfetti();
+        reactMouse('celebrate');
+        saveCurrentGameSession(); earnStars(1);
+      } else {
+        state.status = 'wrong'; state.mistakes += 1; playFx('wrong');
+        reactMouse('oops');
+        saveCurrentGameSession();
+      }
+      render();
+    }
+
+    function nextMatchRound(roundsLen) {
+      playFx('click');
+      if (state.matchRound + 1 < roundsLen) {
+        state.matchRound += 1; state.matchedIds = []; state.matchLeft = null; state.status = 'idle';
+        saveCurrentGameSession();
+      } else {
+        state.score = Math.max(10 - Math.floor(state.mistakes / 2), 5);
+        state.finished = true; playFx('win'); launchConfetti();
+        reactMouse('party');
+        earnStars(2, `${state.gradeId}-${state.gameId}`, state.score);
+      }
+      render();
+    }
+
+    function renderMiniGame(grade) {
+      const titles = {
+        'pt-quiz': { name: 'Quiz de Português', bar: '#F4729B' },
+        'pt-builder': { name: 'Complete a Palavra', bar: '#9E77ED' },
+        'pt-truefalse': { name: 'Certo ou Errado', bar: '#34B37D' },
+        'pt-match': { name: 'Ligue as Palavras', bar: '#EAB308' },
+        'mat-quiz': { name: 'Quiz de Matemática', bar: '#EAB308' },
+        'mat-match': { name: 'Ligue as Contas', bar: '#38A3E8' },
+        'mat-missing': { name: 'Complete a Conta', bar: '#F4729B' },
+        'mat-compare': { name: 'Maior ou Menor', bar: '#9E77ED' },
+      };
+      const meta = titles[state.gameId];
+
+      const buddyBanner = `
+        <div class="rounded-3xl border-3 px-4 py-3 flex flex-col sm:flex-row items-center gap-4 shadow-md ${
+          state.mouseMood === 'celebrate' || state.mouseMood === 'party'
+            ? 'bg-gradient-to-r from-[#FFE066] via-[#8AEBC0] to-[#FFA6C9] border-[#19A86A]'
+            : state.mouseMood === 'oops'
+            ? 'bg-gradient-to-r from-[#FFB5D0] to-[#FFD6E6] border-[#E84D8A]'
+            : state.mouseMood === 'thinking'
+            ? 'bg-gradient-to-r from-[#D7BFFF] to-[#FFE89E] border-[#8548E8]'
+            : 'bg-gradient-to-r from-[#B8E2FF] via-[#FFE6F0] to-[#FFF0A6] border-[#1F90E0]'
+        }">
+          <button onclick="tapBuddyMouse()" title="Toque no amiguinho para conversar!" class="kawaii-btn shrink-0 rounded-full bg-white p-1.5 border-2 border-[#3D2C3E]/15 cursor-pointer">
+            ${renderMouseSvg(state.mouseMood, 'w-20 h-20')}
+          </button>
+          <div class="flex-1 text-center sm:text-left space-y-1">
+            <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+              <span class="text-xs font-extrabold uppercase tracking-wide text-[#8A1143] bg-white px-2.5 py-0.5 rounded-full border border-[#E84D8A]">🐱 Gatinha Mágica</span>
+              ${state.streak >= 2 ? `<span class="text-xs font-extrabold text-[#6B4800] bg-[#FFE066] px-2.5 py-0.5 rounded-full border border-[#E59F00]">🔥 ${state.streak} seguidos!</span>` : ''}
+            </div>
+            <p class="font-display text-base sm:text-lg font-semibold text-[#3D2C3E] leading-snug">“${state.mouseSpeech}”</p>
+          </div>
+          <button onclick="tapBuddyMouse()" class="kawaii-btn px-3.5 py-2 rounded-full bg-[#FFE066] hover:bg-[#FFD43B] border-2 border-[#E59F00] text-[#5C3D00] text-xs font-extrabold cursor-pointer shrink-0">🗣️ Falar!</button>
+        </div>`;
+
+      if (state.finished) {
+        return `
+          <section class="max-w-3xl mx-auto space-y-5 animate-pop-in">
+            ${buddyBanner}
+            <div class="bg-gradient-to-b from-[#FFE066] via-[#FFC2DC] to-[#AEE0FF] rounded-3xl border-3 border-[#E59F00] p-8 text-center space-y-6">
+              <div class="flex justify-center">${renderMouseSvg('party', 'w-28 h-28')}</div>
+              <h2 class="font-display text-3xl font-bold">Parabéns, Super Estudante! ✨🎀</h2>
+              <p class="font-semibold text-[#5C475E]">Você concluiu <strong>${meta.name}</strong> do ${grade.title} e ganhou <strong class="text-[#C93B6B]">+2 estrelas e +50 pontos bônus!</strong></p>
+              <p class="text-sm font-bold text-[#6E5670]">Acertos de primeira: ${state.score} de 10 · Progresso salvo!</p>
+              <div class="flex flex-wrap justify-center gap-3">
+                <button onclick="startGame('${state.gameId}', true)" class="kawaii-btn px-6 py-3 rounded-full bg-[#D94E7A] text-white font-extrabold cursor-pointer">Jogar Novamente</button>
+                <button onclick="selectGrade(${grade.id})" class="kawaii-btn px-6 py-3 rounded-full bg-[#C2E7FF] text-[#16588E] font-extrabold cursor-pointer">Voltar às Matérias</button>
+              </div>
+            </div>
+          </section>`;
+      }
+
+      let bodyHtml = ''; let pct = 10;
+
+      if (state.gameId === 'pt-quiz' || state.gameId === 'mat-quiz') {
+        const list = state.gameId === 'pt-quiz' ? grade.ptQuiz : grade.matQuiz;
+        const q = list[state.step];
+        pct = ((state.step + (state.status === 'correct' ? 1 : 0)) / list.length) * 100;
+        bodyHtml = `<div class="bg-gradient-to-b from-[#FFD4E5] via-[#FFF0F6] to-[#FFE7B3] rounded-3xl border-3 border-[#E84D8A] p-6 sm:p-8 space-y-5">
+          ${q.passage ? `<div class="bg-[#FFF6CC] border-2 border-[#F2D15B] rounded-2xl p-4 font-semibold">${q.passage}</div>` : ''}
+          <div class="flex items-center gap-4"><div class="w-16 h-16 shrink-0 rounded-2xl bg-[#FFF4BD] border-2 border-[#F2D15B] flex items-center justify-center text-3xl">${q.emoji}</div><h3 class="font-display text-xl sm:text-2xl font-bold">${q.prompt}</h3></div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">${q.options.map((opt, idx) => {
+            let cls = 'bg-[#FFF4F8] border-[#F49EB6] hover:bg-[#FFD6E6]';
+            if (state.status === 'correct' && idx === q.correct) cls = 'bg-[#D4F8E8] border-[#42B883] text-[#115E3C]';
+            else if (state.status === 'wrong' && idx === state.selectedOption) cls = 'bg-[#FFE5EC] border-[#E57393] text-[#9E2A4B] animate-wobble';
+            return `<button onclick="pickQuizOption(${idx})" class="kawaii-btn min-h-[54px] px-5 py-3 rounded-full border-2 font-bold text-left cursor-pointer ${cls}">${String.fromCharCode(65 + idx)}) ${opt}</button>`;
+          }).join('')}</div>
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>${state.status === 'correct' ? '<span class="px-4 py-2 rounded-2xl bg-[#D4F8E8] text-[#146B48] font-extrabold">Muito bem! ✨🎀</span>' : state.status === 'wrong' ? '<span class="px-4 py-2 rounded-2xl bg-[#FFF0F4] text-[#9C2D54] font-bold">Quase lá, tente de novo! 🌸</span>' : ''}${state.status !== 'correct' ? `<button onclick="state.showHint=!state.showHint;render()" class="ml-2 px-4 py-2 rounded-full bg-[#FFF4BD] border border-[#F0D15A] text-sm font-bold cursor-pointer">💡 Dica</button>` : ''}</div>
+            ${state.status === 'correct' ? `<button onclick="nextStep(${list.length})" class="kawaii-btn px-6 py-3 rounded-full bg-[#D94E7A] text-white font-extrabold cursor-pointer">Próxima →</button>` : ''}
+          </div>
+          ${state.showHint && state.status !== 'correct' ? `<div class="rounded-2xl bg-[#FFFBE6] border-2 border-[#F5DF7D] p-3 text-sm font-semibold">💡 ${q.hint}</div>` : ''}
+        </div>`;
+      } else if (state.gameId === 'pt-builder') {
+        const c = grade.ptBuilder[state.step];
+        pct = ((state.step + (state.status === 'correct' ? 1 : 0)) / grade.ptBuilder.length) * 100;
+        const boardHtml = c.mode === 'missing'
+          ? `<div class="font-display text-2xl sm:text-4xl font-bold flex flex-wrap items-center justify-center gap-2"><span>${c.prefix}</span><span class="px-4 py-1 rounded-2xl border-2 ${state.status === 'correct' ? 'bg-[#D4F8E8] border-[#42B883]' : 'bg-[#FFF4BD] border-[#E8C547]'}">${state.selectedOption || '?'}</span><span>${c.suffix}</span></div>`
+          : `<div class="flex flex-wrap gap-3 justify-center">${c.target.map((_, sIdx) => { const tIdx = state.assembled[sIdx]; return `<div class="min-w-[72px] h-14 px-4 rounded-2xl border-2 font-display text-xl font-bold flex items-center justify-center ${tIdx !== undefined ? 'bg-[#FFF4BD] border-[#F0D66D]' : 'bg-white border-dashed border-[#C7A9F7] text-[#9A85B5]'}">${tIdx !== undefined ? c.tiles[tIdx] : '?'}</div>`; }).join('')}</div>`;
+        bodyHtml = `<div class="bg-gradient-to-b from-[#DEC9FF] via-[#EFE5FF] to-[#FFE0EE] rounded-3xl border-3 border-[#8548E8] p-6 sm:p-8 space-y-6">
+          <div class="flex items-center gap-4"><div class="w-16 h-16 rounded-2xl bg-[#E5D4FF] flex items-center justify-center text-4xl">${c.emoji}</div><div><p class="text-sm font-bold text-[#6E5670]">${c.instruction}</p><h3 class="font-display text-xl font-bold">${c.mode === 'missing' ? 'Clique na fichinha certa!' : 'Clique nas sílabas na ordem!'}</h3></div></div>
+          <div class="bg-[#FFFDF9] border-2 border-dashed border-[#C7A9F7] rounded-3xl p-6 min-h-[100px] flex items-center justify-center">${boardHtml}</div>
+          <div class="flex flex-wrap justify-center gap-3">${c.tiles.map((t, tIdx) => { const used = c.mode === 'syllables' && state.assembled.includes(tIdx); return `<button ${used ? 'disabled' : ''} onclick="pickBuilderTile(${tIdx})" class="kawaii-btn min-w-[76px] min-h-[54px] px-5 py-3 rounded-full border-2 font-display text-lg font-bold ${used ? 'opacity-40 cursor-not-allowed bg-gray-100' : 'bg-[#FFF0F6] hover:bg-[#FFD6E0] border-[#F4B8CC] cursor-pointer'}">${t}</button>`; }).join('')}</div>
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="flex flex-wrap items-center gap-2">${state.status === 'correct' ? '<span class="px-4 py-2 rounded-2xl bg-[#D4F8E8] text-[#146B48] font-extrabold">Muito bem! ✨🎀</span>' : state.status === 'wrong' ? '<span class="px-4 py-2 rounded-2xl bg-[#FFF0F4] text-[#9C2D54] font-bold">Quase lá, tente de novo! 🌸</span>' : ''}${c.mode === 'syllables' && state.assembled.length > 0 && state.status !== 'correct' ? `<button onclick="state.assembled=[];state.status='idle';saveCurrentGameSession();render()" class="px-4 py-2 rounded-full bg-[#F5EDF0] text-sm font-bold cursor-pointer">Limpar</button>` : ''}${state.status !== 'correct' ? `<button onclick="state.showHint=!state.showHint;render()" class="px-4 py-2 rounded-full bg-[#FFF4BD] border border-[#F0D15A] text-sm font-bold cursor-pointer">💡 Dica</button>` : ''}</div>
+            ${state.status === 'correct' ? `<button onclick="nextStep(${grade.ptBuilder.length})" class="kawaii-btn px-6 py-3 rounded-full bg-[#D94E7A] text-white font-extrabold cursor-pointer">Próxima →</button>` : ''}
+          </div>
+          ${state.showHint && state.status !== 'correct' ? `<div class="rounded-2xl bg-[#FFFBE6] border-2 border-[#F5DF7D] p-3 text-sm font-semibold">💡 ${c.hint}</div>` : ''}
+        </div>`;
+      } else if (state.gameId === 'pt-truefalse') {
+        const c = grade.ptTrueFalse[state.step];
+        pct = ((state.step + (state.status === 'correct' ? 1 : 0)) / grade.ptTrueFalse.length) * 100;
+        bodyHtml = `<div class="bg-gradient-to-b from-[#B8F7DA] via-[#E3FCF0] to-[#FFF2B2] rounded-3xl border-3 border-[#19A86A] p-6 sm:p-8 space-y-6 text-center">
+          <div class="mx-auto w-20 h-20 rounded-3xl bg-[#D4F8E8] flex items-center justify-center text-4xl">${c.emoji}</div>
+          <h3 class="font-display text-2xl sm:text-3xl font-bold max-w-xl mx-auto">${c.statement}</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-lg mx-auto">
+            <button onclick="pickTrueFalse(true)" class="kawaii-btn min-h-[58px] rounded-full border-2 font-display text-xl font-bold cursor-pointer ${state.status === 'correct' && state.selectedOption === true ? 'bg-[#D4F8E8] border-[#42B883] text-[#115E3C]' : state.status === 'wrong' && state.selectedOption === true ? 'bg-[#FFE5EC] border-[#E57393] animate-wobble' : 'bg-[#EEFCF5] hover:bg-[#D4F8E8] border-[#7ED9B2] text-[#146B48]'}">✓ Certo</button>
+            <button onclick="pickTrueFalse(false)" class="kawaii-btn min-h-[58px] rounded-full border-2 font-display text-xl font-bold cursor-pointer ${state.status === 'correct' && state.selectedOption === false ? 'bg-[#D4F8E8] border-[#42B883] text-[#115E3C]' : state.status === 'wrong' && state.selectedOption === false ? 'bg-[#FFE5EC] border-[#E57393] animate-wobble' : 'bg-[#FFF0F4] hover:bg-[#FFD6E0] border-[#F59DB6] text-[#9C2D54]'}">✕ Errado</button>
+          </div>
+          <div class="flex flex-wrap items-center justify-between gap-3 text-left">
+            <div>${state.status === 'correct' ? `<span class="px-4 py-2 rounded-2xl bg-[#D4F8E8] text-[#146B48] font-bold inline-block"><strong>Muito bem! ✨🎀</strong> — ${c.explanation}</span>` : state.status === 'wrong' ? '<span class="px-4 py-2 rounded-2xl bg-[#FFF0F4] text-[#9C2D54] font-bold inline-block">Quase lá, tente de novo! 🌸</span>' : ''}</div>
+            ${state.status === 'correct' ? `<button onclick="nextStep(${grade.ptTrueFalse.length})" class="kawaii-btn px-6 py-3 rounded-full bg-[#D94E7A] text-white font-extrabold cursor-pointer">Próxima →</button>` : ''}
+          </div>
+        </div>`;
+      } else if (state.gameId === 'pt-match' || state.gameId === 'mat-match') {
+        const rounds = state.gameId === 'pt-match' ? grade.ptMatch : grade.matMatch;
+        const pairs = rounds[state.matchRound];
+        const rightSorted = pairs.length === 5 ? [pairs[2], pairs[4], pairs[0], pairs[3], pairs[1]] : [...pairs].reverse();
+        pct = ((state.matchRound * 5 + state.matchedIds.length) / 10) * 100;
+        const doneRound = state.matchedIds.length === pairs.length;
+        bodyHtml = `<div class="bg-gradient-to-b from-[#BDE4FF] via-[#E5F4FF] to-[#FFE1EE] rounded-3xl border-3 border-[#1F90E0] p-6 sm:p-8 space-y-6">
+          <div class="text-center"><h3 class="font-display text-xl sm:text-2xl font-bold">${state.gameId === 'pt-match' ? 'Ligue cada palavra ao seu par!' : 'Ligue cada conta ao resultado!'}</h3><p class="text-sm font-semibold text-[#6E5670]">1º clique na esquerda, depois na direita.</p></div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8">
+            <div class="space-y-3">${pairs.map((p) => { const m = state.matchedIds.includes(p.id); const s = state.matchLeft === p.id; return `<button ${m ? 'disabled' : ''} onclick="pickMatchLeft('${p.id}')" class="kawaii-btn w-full min-h-[54px] px-5 py-3 rounded-full border-2 font-display text-lg font-bold flex justify-between items-center ${m ? 'bg-[#D4F8E8] border-[#42B883]' : s ? 'bg-[#FFF4BD] border-[#EAB308]' : 'bg-[#EEF8FF] border-[#86CBFA] cursor-pointer'}"><span>${p.left}</span><span>${m ? '✅' : s ? '👉' : '✨'}</span></button>`; }).join('')}</div>
+            <div class="space-y-3">${rightSorted.map((p) => { const m = state.matchedIds.includes(p.id); return `<button ${m || !state.matchLeft ? 'disabled' : ''} onclick="pickMatchRight('${p.id}')" class="kawaii-btn w-full min-h-[54px] px-5 py-3 rounded-full border-2 font-display text-lg font-bold flex justify-between items-center ${m ? 'bg-[#D4F8E8] border-[#42B883]' : state.matchLeft ? 'bg-[#FFF0F6] hover:bg-[#FFD6E0] border-[#F49EB6] cursor-pointer' : 'bg-[#FAF6F8] border-[#EADCE2] text-[#8E7A8E]'}"><span>${p.right}</span><span>${m ? '🎀' : '🍬'}</span></button>`; }).join('')}</div>
+          </div>
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>${state.status === 'correct' ? '<span class="px-4 py-2 rounded-2xl bg-[#D4F8E8] text-[#146B48] font-extrabold">Muito bem! ✨🎀</span>' : state.status === 'wrong' ? '<span class="px-4 py-2 rounded-2xl bg-[#FFF0F4] text-[#9C2D54] font-bold">Quase lá, tente de novo! 🌸</span>' : ''}</div>
+            ${doneRound ? `<button onclick="nextMatchRound(${rounds.length})" class="kawaii-btn px-6 py-3 rounded-full bg-[#D94E7A] text-white font-extrabold cursor-pointer">Continuar →</button>` : ''}
+          </div>
+        </div>`;
+      } else if (state.gameId === 'mat-missing') {
+        const c = grade.matMissing[state.step];
+        pct = ((state.step + (state.status === 'correct' ? 1 : 0)) / grade.matMissing.length) * 100;
+        bodyHtml = `<div class="bg-gradient-to-b from-[#FFD1E2] via-[#FFEAF2] to-[#FFF0B8] rounded-3xl border-3 border-[#E84D8A] p-6 sm:p-8 space-y-6">
+          <div class="flex items-center gap-4"><div class="w-16 h-16 rounded-2xl bg-[#FFD6E0] flex items-center justify-center text-4xl">${c.emoji}</div><div><p class="text-sm font-bold text-[#6E5670]">${c.instruction}</p><h3 class="font-display text-xl font-bold">Qual número completa a conta?</h3></div></div>
+          <div class="bg-[#FFFDF9] border-2 border-dashed border-[#F49EB6] rounded-3xl p-6 flex flex-wrap justify-center items-center gap-3">${c.parts.map((pt) => pt === '?' ? `<span class="min-w-[64px] h-14 px-4 rounded-2xl border-2 font-display text-2xl font-bold inline-flex items-center justify-center ${state.status === 'correct' ? 'bg-[#D4F8E8] border-[#42B883]' : 'bg-[#FFF4BD] border-[#E8C547]'}">${state.selectedOption || '?'}</span>` : `<span class="font-display text-2xl sm:text-4xl font-bold">${pt}</span>`).join('')}</div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">${c.options.map((opt) => `<button onclick="pickMissingOption('${opt}')" class="kawaii-btn min-h-[54px] rounded-full border-2 font-display text-xl font-bold cursor-pointer ${state.status === 'correct' && opt === c.answer ? 'bg-[#D4F8E8] border-[#42B883]' : state.status === 'wrong' && opt === state.selectedOption ? 'bg-[#FFE5EC] border-[#E57393] animate-wobble' : 'bg-[#FFF0F6] hover:bg-[#FFD6E0] border-[#F4B8CC]'}">${opt}</button>`).join('')}</div>
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>${state.status === 'correct' ? '<span class="px-4 py-2 rounded-2xl bg-[#D4F8E8] text-[#146B48] font-extrabold">Muito bem! ✨🎀</span>' : state.status === 'wrong' ? '<span class="px-4 py-2 rounded-2xl bg-[#FFF0F4] text-[#9C2D54] font-bold">Quase lá, tente de novo! 🌸</span>' : ''}${state.status !== 'correct' ? `<button onclick="state.showHint=!state.showHint;render()" class="ml-2 px-4 py-2 rounded-full bg-[#FFF4BD] border border-[#F0D15A] text-sm font-bold cursor-pointer">💡 Dica</button>` : ''}</div>
+            ${state.status === 'correct' ? `<button onclick="nextStep(${grade.matMissing.length})" class="kawaii-btn px-6 py-3 rounded-full bg-[#D94E7A] text-white font-extrabold cursor-pointer">Próxima →</button>` : ''}
+          </div>
+          ${state.showHint && state.status !== 'correct' ? `<div class="rounded-2xl bg-[#FFFBE6] border-2 border-[#F5DF7D] p-3 text-sm font-semibold">💡 ${c.hint}</div>` : ''}
+        </div>`;
+      } else {
+        const c = grade.matCompare[state.step];
+        pct = ((state.step + (state.status === 'correct' ? 1 : 0)) / grade.matCompare.length) * 100;
+        bodyHtml = `<div class="bg-gradient-to-b from-[#DEC9FF] via-[#F2EBFF] to-[#CCE9FF] rounded-3xl border-3 border-[#8548E8] p-6 sm:p-8 space-y-6 text-center">
+          <div class="text-3xl">${c.emoji}</div>
+          <h3 class="font-display text-xl sm:text-2xl font-bold">Compare os dois lados!</h3>
+          <div class="flex flex-wrap items-center justify-center gap-4">
+            <div class="min-w-[120px] px-6 py-4 rounded-3xl bg-[#C2E7FF] border-2 border-[#86CBFA] font-display text-2xl font-bold text-[#16588E]">${c.left}</div>
+            <div class="w-16 h-16 rounded-2xl border-2 font-display text-3xl font-bold flex items-center justify-center ${state.status === 'correct' ? 'bg-[#D4F8E8] border-[#42B883]' : 'bg-[#FFF4BD] border-[#E8C547]'}">${state.selectedOption || '?'}</div>
+            <div class="min-w-[120px] px-6 py-4 rounded-3xl bg-[#FFD6E0] border-2 border-[#F59DB6] font-display text-2xl font-bold text-[#9C2D54]">${c.right}</div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-xl mx-auto">
+            ${[{ s: '>', l: 'Maior (>)' }, { s: '=', l: 'Igual (=)' }, { s: '<', l: 'Menor (<)' }].map((it) => `<button onclick="pickCompare('${it.s}')" class="kawaii-btn min-h-[54px] rounded-full border-2 font-display text-lg font-bold cursor-pointer ${state.status === 'correct' && it.s === c.sym ? 'bg-[#D4F8E8] border-[#42B883]' : state.status === 'wrong' && it.s === state.selectedOption ? 'bg-[#FFE5EC] border-[#E57393] animate-wobble' : 'bg-[#F6F0FF] hover:bg-[#E5D4FF] border-[#C7A9F7] text-[#532B94]'}">${it.l}</button>`).join('')}
+          </div>
+          <div class="flex flex-wrap items-center justify-between gap-3 text-left">
+            <div>${state.status === 'correct' ? '<span class="px-4 py-2 rounded-2xl bg-[#D4F8E8] text-[#146B48] font-extrabold">Muito bem! ✨🎀</span>' : state.status === 'wrong' ? '<span class="px-4 py-2 rounded-2xl bg-[#FFF0F4] text-[#9C2D54] font-bold">Quase lá, tente de novo! 🌸</span>' : ''}${state.status !== 'correct' ? `<button onclick="state.showHint=!state.showHint;render()" class="ml-2 px-4 py-2 rounded-full bg-[#FFF4BD] border border-[#F0D15A] text-sm font-bold cursor-pointer">💡 Dica</button>` : ''}</div>
+            ${state.status === 'correct' ? `<button onclick="nextStep(${grade.matCompare.length})" class="kawaii-btn px-6 py-3 rounded-full bg-[#D94E7A] text-white font-extrabold cursor-pointer">Próxima →</button>` : ''}
+          </div>
+          ${state.showHint && state.status !== 'correct' ? `<div class="rounded-2xl bg-[#FFFBE6] border-2 border-[#F5DF7D] p-3 text-sm font-semibold text-left">💡 ${c.hint}</div>` : ''}
+        </div>`;
+      }
+
+      return `
+        <section class="max-w-3xl mx-auto space-y-5 animate-pop-in">
+          <div class="flex flex-wrap items-center justify-between gap-3 bg-gradient-to-r from-[#FFE0EE] via-[#FFF6CC] to-[#D4EEFF] rounded-3xl border-3 border-[#E84D8A] px-5 py-4 shadow-md">
+            <div>
+              <div class="flex flex-wrap items-center gap-2">
+                <p class="text-xs font-extrabold text-[#6E5670]">${grade.title}</p>
+                <span class="text-[11px] font-extrabold text-[#146B48] bg-[#D4F8E8] border border-[#7ED9B2] px-2 py-0.5 rounded-full">💾 Progresso salvo</span>
+              </div>
+              <h2 class="font-display text-xl sm:text-2xl font-bold">${meta.name}</h2>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="startGame('${state.gameId}', true)" class="kawaii-btn px-3.5 py-2 rounded-full bg-[#FFF4BD] border-2 border-[#F0D15A] text-[#6E5104] font-bold text-xs sm:text-sm cursor-pointer">↺ Recomeçar</button>
+              <button onclick="selectGrade(${grade.id})" class="kawaii-btn px-4 py-2 rounded-full bg-[#FFD6E0] border-2 border-[#F59DB6] text-[#9C2D54] font-extrabold text-xs sm:text-sm cursor-pointer">Voltar às Matérias</button>
+            </div>
+          </div>
+          ${buddyBanner}
+          <div class="h-4 w-full rounded-full bg-white overflow-hidden border-2 border-[#F2D6E0]">
+            <div class="h-full rounded-full transition-all duration-300" style="width:${Math.max(8, pct)}%;background:${meta.bar}"></div>
+          </div>
+          ${bodyHtml}
+        </section>`;
+    }
+
+    function render() {
+      const root = document.getElementById('app-root');
+      saveProgress();
+      if (!state.gradeId) root.innerHTML = renderHome();
+      else {
+        const grade = GRADES.find((g) => g.id === state.gradeId);
+        root.innerHTML = state.gameId ? renderMiniGame(grade) : renderSubjectHub(grade);
+      }
+    }
+
+    render();
+  </script>
+</body>
+</html>
