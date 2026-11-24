@@ -70,8 +70,8 @@
     }
 
     @keyframes popIn {
-      0% { opacity: 0; transform: scale(0.92); }
-      100% { opacity: 1; transform: scale(1); }
+      0% { opacity: 1; transform: translateY(6px) scale(0.985); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     @keyframes gentleWobble {
@@ -145,7 +145,10 @@
   <footer class="border-t-3 border-[#F58BB2] bg-gradient-to-r from-[#FFC4DC] via-[#FFE89E] to-[#B8E2FF] py-6 px-4 sm:px-6 mt-8">
     <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-extrabold text-[#3D2C3E]">
       <span>✨ Mágica do Saber · Ensino Fundamental 1 (1º ao 5º Ano)</span>
-      <span>8 jogos por série · Progresso salvo automaticamente no navegador 🎀</span>
+      <div class="flex flex-wrap items-center justify-center gap-3">
+        <a href="https://youtube.com/@magica_dosaber?si=qkLxjgWRhIZfdCje" target="_blank" rel="noopener noreferrer" onclick="playFx('click')" class="kawaii-btn inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#FF2E4C] hover:bg-[#E01E3A] border-2 border-white text-white font-extrabold">▶ Siga nosso canal no YouTube</a>
+        <span>8 jogos por série · Progresso salvo automaticamente no navegador 🎀</span>
+      </div>
     </div>
   </footer>
 
@@ -660,10 +663,10 @@
       showHint: false, hadWrong: false, matchRound: 0, matchLeft: null,
       matchedIds: [], mistakes: 0, finished: false,
       mouseMood: 'idle',
-      mouseSpeech: 'Ihii! Oi, amiguinho! Clique nas respostas ou toque em mim para conversar!',
+      mouseSpeech: 'Olá, amiguinho! Clique nas respostas ou toque em mim para conversar!',
       streak: 0,
       heroMood: 'happy',
-      heroSpeech: 'Ihii! Oi, amiguinho! Toque em mim para ouvir minha voz!',
+      heroSpeech: 'Olá, amiguinho! Toque em mim para ouvir minha voz!',
     };
 
     function restoreSessionIntoState(gameKey) {
@@ -677,14 +680,14 @@
         return;
       }
       Object.assign(state, {
-        step: s.step || 0,
+        step: Math.max(0, Math.min(9, s.step || 0)),
         score: s.score || 0,
         status: s.status || 'idle',
         selectedOption: s.selectedOption !== undefined ? s.selectedOption : null,
         assembled: Array.isArray(s.assembledTiles) ? s.assembledTiles : [],
         showHint: false,
         hadWrong: Boolean(s.hadWrong),
-        matchRound: s.matchRound || 0,
+        matchRound: Math.max(0, Math.min(1, s.matchRound || 0)),
         matchLeft: null,
         matchedIds: Array.isArray(s.matchedIds) ? s.matchedIds : [],
         mistakes: s.mistakes || 0,
@@ -873,69 +876,80 @@
 
     const MOUSE_PHRASES = {
       greet: [
-        'Ihii! Oi, amiguinho! Vamos brincar e aprender juntos?',
-        'Obaaa! Eu sou a Gatinha Mágica! Toque nas respostas para ganhar estrelas!',
-        'Ebaaa! Que legal ter você aqui comigo! Bora jogar?',
-        'Haha! Estou super animado para ver você brilhar!',
+        'Olá, amiguinho! Vamos brincar e aprender juntos?',
+        'Oi! Eu sou a Gatinha Mágica! Toque nas respostas para ganhar estrelas!',
+        'Que bom ter você aqui comigo! Vamos jogar?',
+        'Estou super animada para ver você brilhar hoje!',
       ],
       celebrate: [
-        'Ihii! Obaaa! Você acertou tudinho, amiguinho!',
-        'Uauuu! Que demais! Mais uma estrelinha mágica para você!',
-        'Ebaaa! Isso mesmo! Você é super inteligente, haha!',
-        'Vivaaa! Que resposta incrível! Manda ver!',
+        'Muito bem! Você acertou tudinho, parabéns!',
+        'Que demais! Mais uma estrelinha mágica para você!',
+        'Isso mesmo! Você é super inteligente!',
+        'Excelente! Que resposta incrível, continue assim!',
       ],
       oops: [
-        'Opsie! Quase, quase, amiguinho! Tenta mais uma vez!',
-        'Ai ai ai, foi por pouquinho! Não desiste não, eu torço por você!',
-        'Ih, escorregou! Respira fundo e escolhe outra opção!',
-        'Calminha, amiguinho! Olha a dica fofinha se precisar!',
+        'Quase lá! Tente mais uma vez, você consegue!',
+        'Foi por pouquinho! Não desista, eu estou torcendo por você!',
+        'Ops, essa não era a resposta. Respire fundo e escolha outra opção!',
+        'Sem problemas! Dê uma olhadinha na dica se precisar!',
       ],
       thinking: [
-        'Hmm, deixa eu pensar com você! Olha só essa dica mágica!',
-        'Opa! Tive uma ideia bem legal para te ajudar!',
+        'Deixa eu pensar com você! Olha só essa dica legal!',
+        'Tive uma ótima ideia para te ajudar nessa questão!',
       ],
       party: [
-        'Ebaaa! Ihii! Parabéns, super campeão! Você completou tudo!',
-        'Uhuuu! Festa da gatinha! Você brilhou muito nessa fase!',
+        'Parabéns, super campeão! Você completou todos os desafios!',
+        'Que conquista maravilhosa! Você brilhou muito nessa fase!',
       ],
     };
 
     function pickMousePhrase(emotion, streak = 0) {
       if (emotion === 'celebrate' && streak >= 3) {
-        return `Uauuu! ${streak} acertos seguidos! Ihii, você é imbatível!`;
+        return `Uau! ${streak} acertos seguidos! Você está mandando muito bem!`;
       }
       const list = MOUSE_PHRASES[emotion] || MOUSE_PHRASES.greet;
       return list[Math.floor(Math.random() * list.length)];
     }
 
-    function playMouseChirp(emotion) {
-      const ctx = getCtx();
-      if (!ctx) return;
-      const now = ctx.currentTime;
-      const chirp = (f1, f2, d, dur, vol = 0.055) => {
-        const o = ctx.createOscillator();
-        const g = ctx.createGain();
-        o.type = 'sine';
-        o.frequency.setValueAtTime(f1, now + d);
-        o.frequency.exponentialRampToValueAtTime(f2, now + d + dur);
-        g.gain.setValueAtTime(0.001, now + d);
-        g.gain.linearRampToValueAtTime(vol, now + d + 0.014);
-        g.gain.exponentialRampToValueAtTime(0.001, now + d + dur);
-        o.connect(g); g.connect(ctx.destination);
-        o.start(now + d); o.stop(now + d + dur + 0.02);
+    let pendingSpeechTimer = null;
+
+    function selectFemalePtVoice() {
+      const voices = window.speechSynthesis.getVoices();
+      const ptBr = voices.filter((v) => /^pt([-_]|$)/i.test(v.lang) && /br/i.test(v.lang));
+      const pt = ptBr.length > 0 ? ptBr : voices.filter((v) => /^pt([-_]|$)/i.test(v.lang));
+      const isMale = (n) => /(antonio|antônio|daniel|ricardo|felipe|fabio|fábio|pedro|joao|joão|carlos|henrique|lucas|mateus|tiago|thiago|rafael|bruno|gabriel|rodrigo|duarte|cristiano|humberto|julio|júlio|nicolau|valerio|valério|donato|eddy|reed|rocko|grandpa|masc|\bmale|male[-_]|homem)/i.test(n);
+      const femaleScore = (n) => {
+        const s = n.toLowerCase();
+        if (/francisca|thalita|camila|vitoria|vitória|heloisa|heloísa|fernanda|leticia|letícia|luciana|giovana|yara|elza|brenda/.test(s)) {
+          return /natural|online|neural/.test(s) ? 100 : 85;
+        }
+        if (/google português|google portugues/.test(s)) return 95;
+        if (/maria|ana|raquel|joana|ines|inês|catarina|isabela|juliana|mariana|paula|sofia|flo|sandy|shelley|grandma/.test(s)) return 80;
+        if (/female|mulher|feminina|pt-br-x-afs|pt-br-x-ptd|ptd|sfb/.test(s)) return 75;
+        return 0;
       };
-      if (emotion === 'celebrate' || emotion === 'party') {
-        chirp(780, 1080, 0, 0.075); chirp(920, 1280, 0.085, 0.085); chirp(1080, 1520, 0.18, 0.11);
-      } else if (emotion === 'oops') {
-        chirp(760, 520, 0, 0.11, 0.05); chirp(580, 440, 0.12, 0.12, 0.045);
-      } else if (emotion === 'thinking') {
-        chirp(580, 900, 0, 0.12, 0.045);
-      } else {
-        chirp(740, 1040, 0, 0.075); chirp(880, 1260, 0.085, 0.095);
+      const nonMale = pt.filter((v) => !isMale(v.name));
+      const candidates = nonMale.length > 0 ? nonMale : pt;
+      let best = undefined;
+      let bestScore = -1;
+      for (const v of candidates) {
+        const sc = femaleScore(v.name) + (/natural|online|neural|google/i.test(v.name) ? 5 : 0);
+        if (sc > bestScore) { bestScore = sc; best = v; }
       }
+      if (best && femaleScore(best.name) > 0) return { voice: best, isKnownFemale: true };
+      if (nonMale.length > 0) return { voice: nonMale[0], isKnownFemale: false };
+      return { voice: pt[0], isKnownFemale: false };
+    }
+
+    if (window.speechSynthesis) {
+      try { window.speechSynthesis.getVoices(); } catch (e) {}
     }
 
     function stopMouseVoice() {
+      if (pendingSpeechTimer !== null) {
+        clearTimeout(pendingSpeechTimer);
+        pendingSpeechTimer = null;
+      }
       if (window.speechSynthesis) {
         try { window.speechSynthesis.cancel(); } catch (e) {}
       }
@@ -943,22 +957,49 @@
 
     function speakMouseVoice(text, emotion = 'greet', force = false) {
       if (!state.voiceEnabled && !force) return;
-      playMouseChirp(emotion);
       if (!window.speechSynthesis) return;
       try {
-        window.speechSynthesis.cancel();
+        if (pendingSpeechTimer !== null) {
+          clearTimeout(pendingSpeechTimer);
+          pendingSpeechTimer = null;
+        }
         const clean = text.replace(/[\u{1F300}-\u{1FAFF}✨🎀🌸⭐🔥💬]/gu, '').trim();
         if (!clean) return;
-        const utter = new SpeechSynthesisUtterance(clean);
-        const voices = window.speechSynthesis.getVoices();
-        const ptVoices = voices.filter((v) => v.lang.toLowerCase().startsWith('pt'));
-        const preferred = ptVoices.find((v) => /google|luciana|maria|francisca|fernanda|heloisa|child|female/i.test(v.name)) || ptVoices.find((v) => v.lang.toLowerCase() === 'pt-br') || ptVoices[0];
-        if (preferred) utter.voice = preferred;
-        utter.lang = 'pt-BR';
-        utter.pitch = emotion === 'celebrate' || emotion === 'party' ? 2.0 : emotion === 'oops' ? 1.82 : 1.95;
-        utter.rate = emotion === 'celebrate' || emotion === 'party' ? 1.18 : emotion === 'oops' ? 1.05 : 1.14;
-        utter.volume = 0.94;
-        window.speechSynthesis.speak(utter);
+        const wasActive = window.speechSynthesis.speaking || window.speechSynthesis.pending;
+        if (wasActive) window.speechSynthesis.cancel();
+        const speakNow = () => {
+          try {
+            const utter = new SpeechSynthesisUtterance(clean);
+            const { voice, isKnownFemale } = selectFemalePtVoice();
+            if (voice) utter.voice = voice;
+            utter.lang = 'pt-BR';
+            const basePitch = isKnownFemale ? 1.0 : 1.14;
+            utter.pitch = emotion === 'celebrate' || emotion === 'party' ? Math.min(1.16, basePitch + 0.03) : emotion === 'oops' ? Math.max(0.96, basePitch - 0.02) : basePitch;
+            utter.rate = emotion === 'celebrate' || emotion === 'party' ? 1.0 : emotion === 'oops' ? 0.95 : 0.98;
+            utter.volume = 0.96;
+            window.speechSynthesis.speak(utter);
+          } catch (e) {}
+        };
+        const startAfterVoices = () => {
+          if (window.speechSynthesis.getVoices().length === 0) {
+            let done = false;
+            const onVoices = () => {
+              if (done) return;
+              done = true;
+              window.speechSynthesis.removeEventListener('voiceschanged', onVoices);
+              speakNow();
+            };
+            window.speechSynthesis.addEventListener('voiceschanged', onVoices);
+            setTimeout(onVoices, 140);
+          } else {
+            speakNow();
+          }
+        };
+        if (wasActive) {
+          pendingSpeechTimer = setTimeout(() => { pendingSpeechTimer = null; startAfterVoices(); }, 50);
+        } else {
+          startAfterVoices();
+        }
       } catch (e) {}
     }
 
@@ -1031,7 +1072,7 @@
       state.voiceEnabled = !state.voiceEnabled;
       playFx('click');
       if (!state.voiceEnabled) stopMouseVoice();
-      else speakMouseVoice('Ihii! Oi, amiguinho! Minha voz fofinha está ligada!', 'greet', true);
+      else speakMouseVoice('Oi, amiguinho! Minha voz está ligada!', 'greet', true);
       saveProgress();
     }
 
@@ -1070,7 +1111,7 @@
       state.gameId = gameId;
       state.streak = 0;
       state.mouseMood = 'idle';
-      state.mouseSpeech = 'Ihii! Oi, amiguinho! Clique nas respostas ou toque em mim para conversar!';
+      state.mouseSpeech = 'Olá, amiguinho! Clique nas respostas ou toque em mim para conversar!';
       const key = `${state.gradeId}-${gameId}`;
       if (restartFresh) {
         delete state.gameSessions[key];
@@ -1146,6 +1187,7 @@
                 <div class="flex flex-wrap gap-3 pt-2">
                   <button onclick="document.getElementById('grade-grid').scrollIntoView({behavior:'smooth'})" class="kawaii-btn px-6 py-3 rounded-full bg-[#D94E7A] text-white font-extrabold cursor-pointer">🎮 Escolher Minha Série</button>
                   <button onclick="toggleAlbum(true)" class="kawaii-btn px-5 py-3 rounded-full bg-[#FFF4BD] border-2 border-[#F0D15A] text-[#6E5104] font-extrabold cursor-pointer">🏆 Meus Lacinhos (${unlockedCount}/${REWARDS.length})</button>
+                  <a href="https://youtube.com/@magica_dosaber?si=qkLxjgWRhIZfdCje" target="_blank" rel="noopener noreferrer" onclick="playFx('click')" class="kawaii-btn inline-flex items-center gap-2 px-5 py-3 rounded-full bg-[#FF2E4C] hover:bg-[#E01E3A] border-2 border-white text-white font-extrabold shadow-sm cursor-pointer">▶ Siga nosso canal no YouTube</a>
                 </div>
               </div>
               <div class="lg:col-span-4 flex flex-col items-center">

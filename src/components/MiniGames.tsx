@@ -1623,7 +1623,7 @@ export const MiniGameStage: React.FC<MiniGameProps> = ({
   const [runKey, setRunKey] = useState(0);
   const [mouseMood, setMouseMood] = useState<CartoonMouseMood>('idle');
   const [mouseSpeech, setMouseSpeech] = useState(
-    'Ihii! Oi, amiguinho! Clique nas respostas ou toque em mim para conversar!'
+    'Olá, amiguinho! Clique nas respostas ou toque em mim para conversar!'
   );
   const [streak, setStreak] = useState(0);
 

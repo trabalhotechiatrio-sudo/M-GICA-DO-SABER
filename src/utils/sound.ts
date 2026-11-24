@@ -8,18 +8,22 @@ let musicUnlockListenerAttached = false;
 
 function getAudioContext(createIfMissing = true): AudioContext | null {
   if (typeof window === 'undefined') return null;
-  if (!audioCtx && createIfMissing) {
-    const AudioContextClass =
-      window.AudioContext ||
-      (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-    if (AudioContextClass) {
-      audioCtx = new AudioContextClass();
+  try {
+    if (!audioCtx && createIfMissing) {
+      const AudioContextClass =
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      if (AudioContextClass) {
+        audioCtx = new AudioContextClass();
+      }
     }
+    if (audioCtx && audioCtx.state === 'suspended') {
+      audioCtx.resume().catch(() => {});
+    }
+    return audioCtx;
+  } catch {
+    return null;
   }
-  if (audioCtx && audioCtx.state === 'suspended') {
-    audioCtx.resume().catch(() => {});
-  }
-  return audioCtx;
 }
 
 /* ---------- 1. Sound Effects ---------- */
@@ -28,58 +32,61 @@ export function playKawaiiSound(
   enabled: boolean
 ): void {
   if (!enabled) return;
-  const ctx = getAudioContext(true);
-  if (!ctx) return;
+  try {
+    const ctx = getAudioContext(true);
+    if (!ctx) return;
 
-  const now = ctx.currentTime;
+    const now = ctx.currentTime;
 
-  const playTone = (
-    freq: number,
-    startOffset: number,
-    duration: number,
-    gainPeak = 0.08,
-    wave: OscillatorType = 'sine'
-  ) => {
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = wave;
-    osc.frequency.setValueAtTime(freq, now + startOffset);
-    gain.gain.setValueAtTime(0.001, now + startOffset);
-    gain.gain.exponentialRampToValueAtTime(gainPeak, now + startOffset + 0.015);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + startOffset + duration);
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.start(now + startOffset);
-    osc.stop(now + startOffset + duration + 0.02);
-  };
+    const playTone = (
+      freq: number,
+      startOffset: number,
+      duration: number,
+      gainPeak = 0.08,
+      wave: OscillatorType = 'sine'
+    ) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = wave;
+      osc.frequency.setValueAtTime(freq, now + startOffset);
+      gain.gain.setValueAtTime(0.001, now + startOffset);
+      gain.gain.exponentialRampToValueAtTime(gainPeak, now + startOffset + 0.015);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + startOffset + duration);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now + startOffset);
+      osc.stop(now + startOffset + duration + 0.02);
+    };
 
-  if (type === 'click') {
-    playTone(740, 0, 0.06, 0.05, 'triangle');
-  } else if (type === 'correct') {
-    playTone(587.33, 0, 0.11, 0.085, 'sine'); // D5
-    playTone(739.99, 0.08, 0.11, 0.085, 'sine'); // F#5
-    playTone(880, 0.16, 0.14, 0.09, 'sine'); // A5
-    playTone(1174.66, 0.24, 0.22, 0.085, 'sine'); // D6 sparkle
-  } else if (type === 'wrong') {
-    // Funny gentle cartoon "boing-oops" downward glide
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = 'triangle';
-    osc.frequency.setValueAtTime(420, now);
-    osc.frequency.exponentialRampToValueAtTime(240, now + 0.24);
-    gain.gain.setValueAtTime(0.001, now);
-    gain.gain.linearRampToValueAtTime(0.07, now + 0.03);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.26);
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.start(now);
-    osc.stop(now + 0.28);
-  } else if (type === 'win') {
-    playTone(523.25, 0, 0.12, 0.085, 'sine');
-    playTone(659.25, 0.09, 0.12, 0.085, 'sine');
-    playTone(783.99, 0.18, 0.12, 0.085, 'sine');
-    playTone(1046.5, 0.27, 0.16, 0.095, 'sine');
-    playTone(1318.51, 0.38, 0.34, 0.09, 'sine');
+    if (type === 'click') {
+      playTone(740, 0, 0.06, 0.05, 'triangle');
+    } else if (type === 'correct') {
+      playTone(587.33, 0, 0.11, 0.085, 'sine');
+      playTone(739.99, 0.08, 0.11, 0.085, 'sine');
+      playTone(880, 0.16, 0.14, 0.09, 'sine');
+      playTone(1174.66, 0.24, 0.22, 0.085, 'sine');
+    } else if (type === 'wrong') {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(420, now);
+      osc.frequency.exponentialRampToValueAtTime(240, now + 0.24);
+      gain.gain.setValueAtTime(0.001, now);
+      gain.gain.linearRampToValueAtTime(0.07, now + 0.03);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.26);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.28);
+    } else if (type === 'win') {
+      playTone(523.25, 0, 0.12, 0.085, 'sine');
+      playTone(659.25, 0.09, 0.12, 0.085, 'sine');
+      playTone(783.99, 0.18, 0.12, 0.085, 'sine');
+      playTone(1046.5, 0.27, 0.16, 0.095, 'sine');
+      playTone(1318.51, 0.38, 0.34, 0.09, 'sine');
+    }
+  } catch {
+    // Never let Web Audio failures interrupt UI interactions
   }
 }
 
@@ -251,91 +258,122 @@ export function syncKawaiiMusic(enabled: boolean): void {
   }
 }
 
-/* ---------- 3. Interactive Childlike Cartoon Voice & Emotional Reactions ---------- */
+/* ---------- 3. Natural Female Voice & Friendly Emotional Reactions ---------- */
 export type MouseEmotion = 'greet' | 'celebrate' | 'oops' | 'thinking' | 'party';
 
 export const MOUSE_REACTION_PHRASES: Record<MouseEmotion, string[]> = {
   greet: [
-    'Ihii! Oi, amiguinho! Vamos brincar e aprender juntos?',
-    'Obaaa! Eu sou a Gatinha Mágica! Toque nas respostas para ganhar estrelas!',
-    'Ebaaa! Que legal ter você aqui comigo! Bora jogar?',
-    'Haha! Estou super animado para ver você brilhar!',
+    'Olá, amiguinho! Vamos brincar e aprender juntos?',
+    'Oi! Eu sou a Gatinha Mágica! Toque nas respostas para ganhar estrelas!',
+    'Que bom ter você aqui comigo! Vamos jogar?',
+    'Estou super animada para ver você brilhar hoje!',
   ],
   celebrate: [
-    'Ihii! Obaaa! Você acertou tudinho, amiguinho!',
-    'Uauuu! Que demais! Mais uma estrelinha mágica para você!',
-    'Ebaaa! Isso mesmo! Você é super inteligente, haha!',
-    'Vivaaa! Que resposta incrível! Manda ver!',
+    'Muito bem! Você acertou tudinho, parabéns!',
+    'Que demais! Mais uma estrelinha mágica para você!',
+    'Isso mesmo! Você é super inteligente!',
+    'Excelente! Que resposta incrível, continue assim!',
   ],
   oops: [
-    'Opsie! Quase, quase, amiguinho! Tenta mais uma vez!',
-    'Ai ai ai, foi por pouquinho! Não desiste não, eu torço por você!',
-    'Ih, escorregou! Respira fundo e escolhe outra opção!',
-    'Calminha, amiguinho! Olha a dica fofinha se precisar!',
+    'Quase lá! Tente mais uma vez, você consegue!',
+    'Foi por pouquinho! Não desista, eu estou torcendo por você!',
+    'Ops, essa não era a resposta. Respire fundo e escolha outra opção!',
+    'Sem problemas! Dê uma olhadinha na dica se precisar!',
   ],
   thinking: [
-    'Hmm, deixa eu pensar com você! Olha só essa dica mágica!',
-    'Opa! Tive uma ideia bem legal para te ajudar!',
+    'Deixa eu pensar com você! Olha só essa dica legal!',
+    'Tive uma ótima ideia para te ajudar nessa questão!',
   ],
   party: [
-    'Ebaaa! Ihii! Parabéns, super campeão! Você completou tudo!',
-    'Uhuuu! Festa da gatinha! Você brilhou muito nessa fase!',
+    'Parabéns, super campeão! Você completou todos os desafios!',
+    'Que conquista maravilhosa! Você brilhou muito nessa fase!',
   ],
 };
 
 export function pickRandomMousePhrase(emotion: MouseEmotion, streak = 0): string {
   if (emotion === 'celebrate' && streak >= 3) {
-    return `Uauuu! ${streak} acertos seguidos! Ihii, você é imbatível!`;
+    return `Uau! ${streak} acertos seguidos! Você está mandando muito bem!`;
   }
   const pool = MOUSE_REACTION_PHRASES[emotion];
   return pool[Math.floor(Math.random() * pool.length)];
 }
 
-function playMouseVocalChirp(emotion: MouseEmotion): void {
-  const ctx = getAudioContext(true);
-  if (!ctx) return;
-  const now = ctx.currentTime;
+let pendingSpeechTimer: number | null = null;
 
-  const chirp = (f1: number, f2: number, start: number, dur: number, vol = 0.055) => {
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(f1, now + start);
-    osc.frequency.exponentialRampToValueAtTime(f2, now + start + dur);
-    gain.gain.setValueAtTime(0.001, now + start);
-    gain.gain.linearRampToValueAtTime(vol, now + start + 0.014);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + start + dur);
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.start(now + start);
-    osc.stop(now + start + dur + 0.02);
+function selectNaturalFemalePtVoice(): {
+  voice: SpeechSynthesisVoice | undefined;
+  isKnownFemale: boolean;
+} {
+  if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
+    return { voice: undefined, isKnownFemale: false };
+  }
+  const voices = window.speechSynthesis.getVoices();
+  const ptBrVoices = voices.filter((v) => /^pt([-_]|$)/i.test(v.lang) && /br/i.test(v.lang));
+  const ptVoices =
+    ptBrVoices.length > 0 ? ptBrVoices : voices.filter((v) => /^pt([-_]|$)/i.test(v.lang));
+
+  const isMaleName = (name: string) =>
+    /(antonio|antônio|daniel|ricardo|felipe|fabio|fábio|pedro|joao|joão|carlos|henrique|lucas|mateus|tiago|thiago|rafael|bruno|gabriel|rodrigo|duarte|cristiano|humberto|julio|júlio|nicolau|valerio|valério|donato|eddy|reed|rocko|grandpa|masc|\bmale|male[-_]|homem)/i.test(
+      name
+    );
+
+  const femaleScore = (name: string): number => {
+    const n = name.toLowerCase();
+    if (/francisca|thalita|camila|vitoria|vitória|heloisa|heloísa|fernanda|leticia|letícia|luciana|giovana|yara|elza|brenda/.test(n)) {
+      return /natural|online|neural/.test(n) ? 100 : 85;
+    }
+    if (/google português|google portugues/.test(n)) return 95;
+    if (/maria|ana|raquel|joana|ines|inês|catarina|isabela|juliana|mariana|paula|sofia|flo|sandy|shelley|grandma/.test(n)) {
+      return 80;
+    }
+    if (/female|mulher|feminina|pt-br-x-afs|pt-br-x-ptd|ptd|sfb/.test(n)) {
+      return 75;
+    }
+    return 0;
   };
 
-  if (emotion === 'celebrate' || emotion === 'party') {
-    // Bubbly childlike "i-hi-hi!" rising giggle
-    chirp(780, 1080, 0, 0.075);
-    chirp(920, 1280, 0.085, 0.085);
-    chirp(1080, 1520, 0.18, 0.11);
-  } else if (emotion === 'oops') {
-    // Cute playful cartoon "u-oh!" wobble
-    chirp(760, 520, 0, 0.11, 0.05);
-    chirp(580, 440, 0.12, 0.12, 0.045);
-  } else if (emotion === 'thinking') {
-    // Curious "hmm?"
-    chirp(580, 900, 0, 0.12, 0.045);
-  } else {
-    // Cheerful "oi-oi!"
-    chirp(740, 1040, 0, 0.075);
-    chirp(880, 1260, 0.085, 0.095);
+  const nonMale = ptVoices.filter((v) => !isMaleName(v.name));
+  const candidates = nonMale.length > 0 ? nonMale : ptVoices;
+
+  let bestVoice: SpeechSynthesisVoice | undefined;
+  let bestScore = -1;
+  for (const v of candidates) {
+    const score = femaleScore(v.name) + (/natural|online|neural|google/i.test(v.name) ? 5 : 0);
+    if (score > bestScore) {
+      bestScore = score;
+      bestVoice = v;
+    }
+  }
+
+  if (bestVoice && femaleScore(bestVoice.name) > 0) {
+    return { voice: bestVoice, isKnownFemale: true };
+  }
+  if (nonMale.length > 0) {
+    return { voice: nonMale[0], isKnownFemale: false };
+  }
+  return { voice: ptVoices[0], isKnownFemale: false };
+}
+
+if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+  try {
+    window.speechSynthesis.getVoices();
+  } catch {
+    // ignore
   }
 }
 
 export function stopMouseVoice(): void {
-  if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-    try {
-      window.speechSynthesis.cancel();
-    } catch {
-      // ignore
+  if (typeof window !== 'undefined') {
+    if (pendingSpeechTimer !== null) {
+      window.clearTimeout(pendingSpeechTimer);
+      pendingSpeechTimer = null;
+    }
+    if ('speechSynthesis' in window) {
+      try {
+        window.speechSynthesis.cancel();
+      } catch {
+        // ignore
+      }
     }
   }
 }
@@ -346,45 +384,77 @@ export function speakMouseVoice(
   enabled: boolean
 ): void {
   if (!enabled || typeof window === 'undefined') return;
-
-  // Always play cute bubbly cartoon giggle/chirp
-  playMouseVocalChirp(emotion);
-
   if (!('speechSynthesis' in window)) return;
 
   try {
-    window.speechSynthesis.cancel();
-    const cleanText = text.replace(/[\u{1F300}-\u{1FAFF}✨🎀⭐🌸💡🎉🏆]/gu, '').trim();
+    if (pendingSpeechTimer !== null) {
+      window.clearTimeout(pendingSpeechTimer);
+      pendingSpeechTimer = null;
+    }
+
+    const cleanText = text.replace(/[\u{1F300}-\u{1FAFF}✨🎀⭐🌸💡🎉🏆🔥💬]/gu, '').trim();
     if (!cleanText) return;
 
-    const utter = new SpeechSynthesisUtterance(cleanText);
-    utter.lang = 'pt-BR';
+    const wasActive = window.speechSynthesis.speaking || window.speechSynthesis.pending;
+    if (wasActive) {
+      window.speechSynthesis.cancel();
+    }
 
-    const voices = window.speechSynthesis.getVoices();
-    const ptVoices = voices.filter((v) => v.lang.toLowerCase().startsWith('pt'));
-    const preferredVoice =
-      ptVoices.find((v) => /google|luciana|maria|francisca|fernanda|heloisa|child|female/i.test(v.name)) ||
-      ptVoices.find((v) => v.lang.toLowerCase() === 'pt-br') ||
-      ptVoices[0];
-    if (preferredVoice) utter.voice = preferredVoice;
+    const speakNow = () => {
+      try {
+        const utter = new SpeechSynthesisUtterance(cleanText);
+        utter.lang = 'pt-BR';
 
-    // Extra cute, lively and childlike high-pitched voice profile
-    utter.pitch =
-      emotion === 'celebrate' || emotion === 'party'
-        ? 2.0
-        : emotion === 'oops'
-        ? 1.82
-        : 1.95;
-    utter.rate =
-      emotion === 'celebrate' || emotion === 'party'
-        ? 1.18
-        : emotion === 'oops'
-        ? 1.05
-        : 1.14;
-    utter.volume = 0.94;
+        const { voice, isKnownFemale } = selectNaturalFemalePtVoice();
+        if (voice) utter.voice = voice;
 
-    window.speechSynthesis.speak(utter);
+        // Normal, clear, natural woman's voice (avoid cartoonish high pitch)
+        const basePitch = isKnownFemale ? 1.0 : 1.14;
+        utter.pitch =
+          emotion === 'celebrate' || emotion === 'party'
+            ? Math.min(1.16, basePitch + 0.03)
+            : emotion === 'oops'
+            ? Math.max(0.96, basePitch - 0.02)
+            : basePitch;
+        utter.rate =
+          emotion === 'celebrate' || emotion === 'party'
+            ? 1.0
+            : emotion === 'oops'
+            ? 0.95
+            : 0.98;
+        utter.volume = 0.96;
+
+        window.speechSynthesis.speak(utter);
+      } catch {
+        // ignore speech errors
+      }
+    };
+
+    const startAfterVoices = () => {
+      if (window.speechSynthesis.getVoices().length === 0) {
+        let spoken = false;
+        const onVoices = () => {
+          if (spoken) return;
+          spoken = true;
+          window.speechSynthesis.removeEventListener('voiceschanged', onVoices);
+          speakNow();
+        };
+        window.speechSynthesis.addEventListener('voiceschanged', onVoices);
+        window.setTimeout(onVoices, 140);
+      } else {
+        speakNow();
+      }
+    };
+
+    if (wasActive) {
+      pendingSpeechTimer = window.setTimeout(() => {
+        pendingSpeechTimer = null;
+        startAfterVoices();
+      }, 50);
+    } else {
+      startAfterVoices();
+    }
   } catch {
-    // Fallback already handled by Web Audio chirp
+    // ignore speech errors
   }
 }

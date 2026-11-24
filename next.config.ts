@@ -4,6 +4,12 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
+  allowedDevOrigins: [
+    '*.us-east1.run.app',
+    '*.run.app',
+    'localhost',
+    '127.0.0.1',
+  ],
 };
 
 export default nextConfig;

@@ -14,6 +14,7 @@ import {
   Trophy,
   Volume2,
   VolumeX,
+  Youtube,
 } from 'lucide-react';
 import { GRADES, GradeId, GradeInfo, KAWAII_REWARDS, MiniGameId } from '../data/curriculum';
 import {
@@ -65,7 +66,7 @@ export default function MagicaDoSaberApp() {
   const [albumOpen, setAlbumOpen] = useState(false);
   const [heroMouseMood, setHeroMouseMood] = useState<CartoonMouseMood>('happy');
   const [heroMouseSpeech, setHeroMouseSpeech] = useState(
-    'Ihii! Oi, amiguinho! Toque em mim para ouvir minha voz!'
+    'Olá, amiguinho! Toque em mim para ouvir minha voz!'
   );
 
   const musicEnabled = progress.audioPrefs.musicEnabled;
@@ -171,7 +172,7 @@ export default function MagicaDoSaberApp() {
     if (!nextVoice) {
       stopMouseVoice();
     } else {
-      speakMouseVoice('Ihii! Oi, amiguinho! Minha voz fofinha está ligada!', 'greet', true);
+      speakMouseVoice('Oi, amiguinho! Minha voz está ligada!', 'greet', true);
     }
     setProgress((prev) => {
       const next: StudentProgress = {
@@ -197,13 +198,21 @@ export default function MagicaDoSaberApp() {
   const handleSelectGrade = (gradeId: GradeId) => {
     playKawaiiSound('click', sfxEnabled);
     updateNavigationState(gradeId, null);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    try {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch {
+      window.scrollTo(0, 0);
+    }
   };
 
   const handleStartGame = (gameId: MiniGameId) => {
     playKawaiiSound('click', sfxEnabled);
     updateNavigationState(selectedGradeId, gameId);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    try {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch {
+      window.scrollTo(0, 0);
+    }
   };
 
   const handleSaveGameSession = (gameKey: string, session: SavedGameSession | null) => {
@@ -452,6 +461,16 @@ export default function MagicaDoSaberApp() {
                         Meus Lacinhos ({unlockedRewardsCount}/{KAWAII_REWARDS.length})
                       </span>
                     </button>
+                    <a
+                      href="https://youtube.com/@magica_dosaber?si=qkLxjgWRhIZfdCje"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => playKawaiiSound('click', sfxEnabled)}
+                      className="kawaii-btn inline-flex items-center gap-2 px-5 py-3 rounded-full bg-[#FF2E4C] hover:bg-[#E01E3A] border-2 border-white text-white font-extrabold text-base shadow-sm cursor-pointer"
+                    >
+                      <Youtube className="w-5 h-5 shrink-0" />
+                      <span>Siga nosso canal no YouTube</span>
+                    </a>
                   </div>
                 </div>
 
@@ -850,6 +869,7 @@ export default function MagicaDoSaberApp() {
         {/* VIEW 3: MINI-JOGO ATIVO */}
         {selectedGrade && activeGameId && (
           <MiniGameStage
+            key={`${selectedGrade.id}-${activeGameId}`}
             grade={selectedGrade}
             gameId={activeGameId}
             soundEnabled={sfxEnabled}
@@ -871,14 +891,27 @@ export default function MagicaDoSaberApp() {
             <span>Mágica do Saber · Ensino Fundamental 1 (1º ao 5º Ano)</span>
           </div>
 
-          <a
-            href="/mundo-doce-do-saber.html"
-            download="magica-do-saber.html"
-            className="kawaii-btn inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#FFF0F6] hover:bg-[#FFD6E0] border-2 border-[#F4B8CC] text-[#3D2C3E] transition-colors"
-          >
-            <Download className="w-3.5 h-3.5 text-[#D94E7A]" />
-            <span>Baixar Versão HTML Único (Tailwind CDN)</span>
-          </a>
+          <div className="flex flex-wrap items-center justify-center gap-2.5">
+            <a
+              href="https://youtube.com/@magica_dosaber?si=qkLxjgWRhIZfdCje"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => playKawaiiSound('click', sfxEnabled)}
+              className="kawaii-btn inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#FF2E4C] hover:bg-[#E01E3A] border-2 border-white text-white font-extrabold transition-colors"
+            >
+              <Youtube className="w-4 h-4 shrink-0" />
+              <span>Siga nosso canal no YouTube</span>
+            </a>
+
+            <a
+              href="/mundo-doce-do-saber.html"
+              download="magica-do-saber.html"
+              className="kawaii-btn inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#FFF0F6] hover:bg-[#FFD6E0] border-2 border-[#F4B8CC] text-[#3D2C3E] transition-colors"
+            >
+              <Download className="w-3.5 h-3.5 text-[#D94E7A]" />
+              <span>Baixar Versão HTML Único (Tailwind CDN)</span>
+            </a>
+          </div>
         </div>
       </footer>
 
