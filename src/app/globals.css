@@ -1,20 +1,15 @@
 @import "tailwindcss";
 
 @layer base {
-  :root {
-    --font-display: 'Fredoka', system-ui, -apple-system, sans-serif;
-    --font-body: 'Nunito', system-ui, -apple-system, sans-serif;
-  }
-
   body {
-    font-family: var(--font-body);
+    font-family: var(--font-body), 'Nunito', system-ui, -apple-system, sans-serif;
     background-color: #F7D8EC;
     color: #3D2C3E;
     overflow-x: hidden;
   }
 
   h1, h2, h3, h4, .font-display {
-    font-family: var(--font-display);
+    font-family: var(--font-display), 'Fredoka', system-ui, -apple-system, sans-serif;
     text-wrap: balance;
   }
 }

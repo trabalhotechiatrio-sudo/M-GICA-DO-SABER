@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 
 export const KawaiiBowIcon: React.FC<{ className?: string; color?: string }> = ({

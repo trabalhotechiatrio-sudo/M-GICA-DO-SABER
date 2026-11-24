@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useEffect, useState } from 'react';
 import {
   ArrowLeft,
@@ -13,16 +15,16 @@ import {
   Volume2,
   VolumeX,
 } from 'lucide-react';
-import { GRADES, GradeId, GradeInfo, KAWAII_REWARDS, MiniGameId } from './data/curriculum';
+import { GRADES, GradeId, GradeInfo, KAWAII_REWARDS, MiniGameId } from '../data/curriculum';
 import {
   CartoonMouseMood,
   KawaiiBowIcon,
   KawaiiCartoonMouse,
   KawaiiStarIcon,
   MASCOT_LOGO_SRC,
-} from './components/KawaiiIllustrations';
-import { MiniGameStage } from './components/MiniGames';
-import { TrophyAlbumModal } from './components/TrophyAlbumModal';
+} from './KawaiiIllustrations';
+import { MiniGameStage } from './MiniGames';
+import { TrophyAlbumModal } from './TrophyAlbumModal';
 import {
   pickRandomMousePhrase,
   playKawaiiSound,
@@ -30,15 +32,16 @@ import {
   stopKawaiiMusic,
   stopMouseVoice,
   syncKawaiiMusic,
-} from './utils/sound';
+} from '../utils/sound';
 import {
   clearStudentProgress,
+  DEFAULT_PROGRESS,
   loadStudentProgress,
   PROGRESS_STORAGE_KEY,
   SavedGameSession,
   saveStudentProgress,
   StudentProgress,
-} from './utils/storage';
+} from '../utils/storage';
 
 function getSessionProgressLabel(gameId: MiniGameId, session?: SavedGameSession): string | null {
   if (!session) return null;
@@ -54,14 +57,11 @@ function getSessionProgressLabel(gameId: MiniGameId, session?: SavedGameSession)
   return `Em andamento: ${Math.min(10, Math.max(1, answered || 1))}/10 ✨`;
 }
 
-export default function App() {
-  const [progress, setProgress] = useState<StudentProgress>(() => loadStudentProgress());
-  const [selectedGradeId, setSelectedGradeId] = useState<GradeId | null>(
-    () => loadStudentProgress().lastGradeId
-  );
-  const [activeGameId, setActiveGameId] = useState<MiniGameId | null>(
-    () => loadStudentProgress().activeGameId
-  );
+export default function MagicaDoSaberApp() {
+  const [hydrated, setHydrated] = useState(false);
+  const [progress, setProgress] = useState<StudentProgress>(DEFAULT_PROGRESS);
+  const [selectedGradeId, setSelectedGradeId] = useState<GradeId | null>(null);
+  const [activeGameId, setActiveGameId] = useState<MiniGameId | null>(null);
   const [albumOpen, setAlbumOpen] = useState(false);
   const [heroMouseMood, setHeroMouseMood] = useState<CartoonMouseMood>('happy');
   const [heroMouseSpeech, setHeroMouseSpeech] = useState(
@@ -73,12 +73,22 @@ export default function App() {
   const voiceEnabled = progress.audioPrefs.voiceEnabled;
 
   useEffect(() => {
-    saveStudentProgress(progress);
-  }, [progress]);
+    const loaded = loadStudentProgress();
+    setProgress(loaded);
+    setSelectedGradeId(loaded.lastGradeId);
+    setActiveGameId(loaded.activeGameId);
+    setHydrated(true);
+  }, []);
 
   useEffect(() => {
+    if (!hydrated) return;
+    saveStudentProgress(progress);
+  }, [progress, hydrated]);
+
+  useEffect(() => {
+    if (!hydrated) return;
     syncKawaiiMusic(musicEnabled);
-  }, [musicEnabled]);
+  }, [musicEnabled, hydrated]);
 
   useEffect(() => {
     return () => {
@@ -445,7 +455,7 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Interactive Cartoon Mouse Mascot */}
+                {/* Interactive Mascot */}
                 <div className="lg:col-span-4 flex flex-col items-center justify-center">
                   <button
                     type="button"

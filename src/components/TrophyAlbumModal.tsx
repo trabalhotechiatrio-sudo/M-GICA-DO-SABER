@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { X, Lock, Trash2 } from 'lucide-react';
 import { KAWAII_REWARDS } from '../data/curriculum';
